@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { membership, sampleMF, type Curve, type Variable } from '../../lib/ai/fuzzy';
 
-export const TERM_COLORS = ['#3b82f6', '#f97316', '#22c55e', '#ef4444', '#a855f7', '#eab308', '#06b6d4'];
+export const TERM_COLORS = ['#2F5FD0', '#E5533D', '#3F9B57', '#F2B33D', '#1F8A8A', '#8B5E3C', '#6B665C'];
 
 interface Props {
   variable: Variable;
@@ -35,14 +35,14 @@ export default function MFChart({ variable, x, termStrengths, aggregated, crisp,
       {/* axes */}
       {[0, 0.5, 1].map((mu) => (
         <g key={mu}>
-          <line x1={PAD.l} x2={W - PAD.r} y1={sy(mu)} y2={sy(mu)} stroke="#1e293b" strokeDasharray={mu === 0 ? undefined : '3 3'} />
-          <text x={PAD.l - 4} y={sy(mu) + 4} fontSize="10" fill="#64748b" textAnchor="end">{mu}</text>
+          <line x1={PAD.l} x2={W - PAD.r} y1={sy(mu)} y2={sy(mu)} stroke="#E8E4DA" strokeDasharray={mu === 0 ? undefined : '3 3'} />
+          <text x={PAD.l - 4} y={sy(mu) + 4} fontSize="10" fill="#8A857A" textAnchor="end">{mu}</text>
         </g>
       ))}
       {Array.from({ length: ticks }, (_, i) => lo + ((hi - lo) * i) / (ticks - 1)).map((v) => (
-        <text key={v} x={sx(v)} y={H - 8} fontSize="10" fill="#64748b" textAnchor="middle">{fmtTick(v)}</text>
+        <text key={v} x={sx(v)} y={H - 8} fontSize="10" fill="#8A857A" textAnchor="middle">{fmtTick(v)}</text>
       ))}
-      <text x={W - PAD.r} y={H - 8} fontSize="10" fill="#94a3b8" textAnchor="end" dx="-2" dy="-10">{variable.unit}</text>
+      <text x={W - PAD.r} y={H - 8} fontSize="10" fill="#6B665C" textAnchor="end" dx="-2" dy="-10">{variable.unit}</text>
       {/* clipped consequents (outputs) */}
       {termStrengths &&
         variable.terms.map((t, i) => {
@@ -50,7 +50,7 @@ export default function MFChart({ variable, x, termStrengths, aggregated, crisp,
           return s > 0 ? <path key={t.name} d={area(curves[i], s)} fill={TERM_COLORS[i % TERM_COLORS.length]} opacity={0.35} /> : null;
         })}
       {/* aggregated envelope */}
-      {aggregated && <path d={path(aggregated)} fill="none" stroke="#f8fafc" strokeWidth={2.2} />}
+      {aggregated && <path d={path(aggregated)} fill="none" stroke="#1C1B19" strokeWidth={2.2} />}
       {/* membership functions */}
       {variable.terms.map((t, i) => (
         <path key={t.name} d={path(curves[i])} fill="none" stroke={TERM_COLORS[i % TERM_COLORS.length]} strokeWidth={highlightTerm === t.name ? 3 : 1.6} opacity={termStrengths ? 0.8 : 1} />
@@ -58,32 +58,32 @@ export default function MFChart({ variable, x, termStrengths, aggregated, crisp,
       {/* current input */}
       {x !== undefined && (
         <g>
-          <line x1={sx(x)} x2={sx(x)} y1={sy(1)} y2={sy(0)} stroke="#eab308" strokeWidth={1.5} strokeDasharray="4 3" />
+          <line x1={sx(x)} x2={sx(x)} y1={sy(1)} y2={sy(0)} stroke="#F2B33D" strokeWidth={1.5} strokeDasharray="4 3" />
           {variable.terms.map((t, i) => {
             const mu = membership(t.mf, x);
             return mu > 0.005 ? (
               <g key={t.name}>
                 <line x1={PAD.l} x2={sx(x)} y1={sy(mu)} y2={sy(mu)} stroke={TERM_COLORS[i % TERM_COLORS.length]} strokeWidth={1} strokeDasharray="2 3" opacity={0.8} />
-                <circle cx={sx(x)} cy={sy(mu)} r={4} fill={TERM_COLORS[i % TERM_COLORS.length]} stroke="#0f172a" strokeWidth={1.5} />
+                <circle cx={sx(x)} cy={sy(mu)} r={4} fill={TERM_COLORS[i % TERM_COLORS.length]} stroke="#1C1B19" strokeWidth={1.5} />
                 <text x={sx(x) + 6} y={sy(mu) - 4} fontSize="10" fill={TERM_COLORS[i % TERM_COLORS.length]} fontFamily="ui-monospace, monospace">{mu.toFixed(2)}</text>
               </g>
             ) : null;
           })}
-          <text x={sx(x)} y={PAD.t - 3} fontSize="10" fill="#eab308" textAnchor="middle" fontFamily="ui-monospace, monospace">{x.toFixed(2)}</text>
+          <text x={sx(x)} y={PAD.t - 3} fontSize="10" fill="#F2B33D" textAnchor="middle" fontFamily="ui-monospace, monospace">{x.toFixed(2)}</text>
         </g>
       )}
       {/* crisp output */}
       {crisp !== undefined && (
         <g>
-          <line x1={sx(crisp)} x2={sx(crisp)} y1={sy(1)} y2={sy(0)} stroke="#ef4444" strokeWidth={2.2} />
-          <text x={sx(crisp)} y={PAD.t - 3} fontSize="11" fill="#ef4444" textAnchor="middle" fontWeight="bold" fontFamily="ui-monospace, monospace">{crisp.toFixed(2)}</text>
+          <line x1={sx(crisp)} x2={sx(crisp)} y1={sy(1)} y2={sy(0)} stroke="#E5533D" strokeWidth={2.2} />
+          <text x={sx(crisp)} y={PAD.t - 3} fontSize="11" fill="#E5533D" textAnchor="middle" fontWeight="bold" fontFamily="ui-monospace, monospace">{crisp.toFixed(2)}</text>
         </g>
       )}
       {/* legend */}
       {variable.terms.map((t, i) => (
         <g key={t.name} transform={`translate(${PAD.l + 4 + i * 74}, 4)`}>
           <rect width="8" height="8" fill={TERM_COLORS[i % TERM_COLORS.length]} rx="1" />
-          <text x="11" y="8" fontSize="10" fill="#cbd5e1">{t.name}</text>
+          <text x="11" y="8" fontSize="10" fill="#1C1B19">{t.name}</text>
         </g>
       ))}
     </svg>

@@ -32,7 +32,7 @@ function Body({ matrix, color, opacity = 1, label }: { matrix: Mat4; color: stri
       {/* a notch so the orientation is unambiguous */}
       <mesh position={[0.1, 0, 0.06]}>
         <boxGeometry args={[0.04, 0.16, 0.02]} />
-        <meshStandardMaterial color="#fde68a" transparent={opacity < 1} opacity={opacity} />
+        <meshStandardMaterial color="#F2B33D" transparent={opacity < 1} opacity={opacity} />
       </mesh>
       <Frame matrix={IDENTITY} size={0.2} label={label} />
     </group>
@@ -49,26 +49,26 @@ export default function ScrewScene({ u, p, current, helix, progress, point, ghos
 
   return (
     <Canvas shadows dpr={[1, 2]} gl={{ preserveDrawingBuffer: true, antialias: true }} camera={{ position: [1.9, 1.5, 2.1], fov: 40, near: 0.01, far: 50 }} className="rounded-lg">
-      <color attach="background" args={['#020617']} />
+      <color attach="background" args={['#FBFAF7']} />
       <ambientLight intensity={0.6} />
       <directionalLight position={[3, 5, 2]} intensity={1.1} castShadow />
       <directionalLight position={[-3, 2, -2]} intensity={0.3} />
-      <gridHelper args={[4, 40, '#334155', '#1e293b']} position={[0, -0.001, 0]} />
+      <gridHelper args={[4, 40, '#CFC8B8', '#E8E4DA']} position={[0, -0.001, 0]} />
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <Frame matrix={IDENTITY} size={0.5} label="{0}" lineWidth={3} />
         {/* screw axis */}
-        <Line points={axisLine} color="#a78bfa" lineWidth={2} dashed dashSize={0.06} gapSize={0.04} />
+        <Line points={axisLine} color="#1F8A8A" lineWidth={2} dashed dashSize={0.06} gapSize={0.04} />
         <mesh position={p}>
           <sphereGeometry args={[0.02, 16, 16]} />
-          <meshStandardMaterial color="#a78bfa" />
+          <meshStandardMaterial color="#1F8A8A" />
         </mesh>
         {/* helix: full path faint, traversed part bright */}
-        {helix.length > 1 && <Line points={helix} color="#eab308" lineWidth={1.5} transparent opacity={0.35} />}
-        {done.length > 1 && <Line points={done} color="#eab308" lineWidth={3} />}
+        {helix.length > 1 && <Line points={helix} color="#F2B33D" lineWidth={1.5} transparent opacity={0.35} />}
+        {done.length > 1 && <Line points={done} color="#F2B33D" lineWidth={3} />}
         {/* start position of the object (ghost) and the object itself */}
-        <Body matrix={bodyStart} color="#64748b" opacity={0.25} />
-        <Body matrix={bodyNow} color="#38bdf8" label="{1}" />
-        {bodyGhost && <Body matrix={bodyGhost} color="#c084fc" opacity={0.6} label={ghostLabel} />}
+        <Body matrix={bodyStart} color="#8A857A" opacity={0.25} />
+        <Body matrix={bodyNow} color="#2F5FD0" label="{1}" />
+        {bodyGhost && <Body matrix={bodyGhost} color="#1F8A8A" opacity={0.6} label={ghostLabel} />}
       </group>
       <OrbitControls makeDefault target={[0.2, 0.4, 0]} enableDamping dampingFactor={0.1} minDistance={0.5} maxDistance={10} />
     </Canvas>

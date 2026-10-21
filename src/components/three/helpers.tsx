@@ -22,12 +22,12 @@ export function Frame({ matrix, label, size = 0.12, lineWidth = 2.5 }: { matrix:
   const m = useMemo(() => toThree(matrix), [matrix]);
   return (
     <group matrix={m} matrixAutoUpdate={false}>
-      <Line points={[[0, 0, 0], [size, 0, 0]]} color="#ef4444" lineWidth={lineWidth} />
-      <Line points={[[0, 0, 0], [0, size, 0]]} color="#22c55e" lineWidth={lineWidth} />
-      <Line points={[[0, 0, 0], [0, 0, size]]} color="#3b82f6" lineWidth={lineWidth} />
+      <Line points={[[0, 0, 0], [size, 0, 0]]} color="#E5533D" lineWidth={lineWidth} />
+      <Line points={[[0, 0, 0], [0, size, 0]]} color="#3F9B57" lineWidth={lineWidth} />
+      <Line points={[[0, 0, 0], [0, 0, size]]} color="#2F5FD0" lineWidth={lineWidth} />
       {label && (
         <Html position={[size * 0.9, size * 0.9, 0]} center style={{ pointerEvents: 'none' }}>
-          <span className="whitespace-nowrap rounded bg-slate-900/80 px-1 font-mono text-[11px] text-slate-200">{label}</span>
+          <span className="whitespace-nowrap rounded bg-white px-1 font-mono text-[11px] text-ink">{label}</span>
         </Html>
       )}
     </group>

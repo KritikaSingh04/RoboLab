@@ -33,7 +33,7 @@ export default function Slider({ label, value, min, max, step = 0.01, unit = '',
         <span className="flex items-center gap-1">
           <input
             type="number"
-            className="mono w-24 rounded-md border border-slate-700 bg-slate-900 px-2 py-0.5 text-right text-sm text-slate-100 focus:border-sky-500 focus:outline-none"
+            className="mono w-24 rounded-md border border-line bg-field px-2 py-0.5 text-right text-sm text-ink focus:border-cobalt focus:outline-none"
             value={Number.isFinite(value) ? Number(value.toFixed(decimals)) : ''}
             min={min}
             max={max}
@@ -45,7 +45,7 @@ export default function Slider({ label, value, min, max, step = 0.01, unit = '',
             }}
             aria-label={`${label} value`}
           />
-          {unit && <span className="w-6 text-sm text-slate-400">{unit}</span>}
+          {unit && <span className="w-6 text-sm text-muted">{unit}</span>}
         </span>
       </div>
       <input id={id} type="range" value={value} min={min} max={max} step={step} disabled={disabled} onChange={(e) => onChange(parseFloat(e.target.value))} />

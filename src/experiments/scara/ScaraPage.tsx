@@ -24,13 +24,14 @@ import {
   wrapAngle,
 } from '../../lib/math/kinematics';
 import { deg2rad, rad2deg, type Vec3 } from '../../lib/math/matrix';
+import { LINK_COLORS as PALETTE_LINKS } from '../../theme';
 import DhTableEditor from './DhTableEditor';
 import ScaraScene from './ScaraScene';
 import ScaraTopView from './ScaraTopView';
 
 const experiment = findExperiment('scara')!;
 
-const LINK_COLORS = ['#3b82f6', '#f97316', '#22c55e', '#ef4444'];
+const LINK_COLORS = [...PALETTE_LINKS];
 const INITIAL_Q = [deg2rad(30), deg2rad(50), 0.06, deg2rad(20)];
 const TRAIL_MAX = 2500;
 
@@ -105,7 +106,7 @@ export default function ScaraPage() {
   const controls = (
     <>
       <div className="space-y-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Joint variables</div>
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Joint variables</div>
         {SCARA_JOINT_CELLS.map((cell, i) => {
           const [lo, hi] = SCARA_JOINT_LIMITS[i];
           const rev = cell.kind === 'revolute';
@@ -128,7 +129,7 @@ export default function ScaraPage() {
 
       <PlaybackControls loop={loop} label="Demo motion" />
 
-      <div className="space-y-3 border-t border-slate-800 pt-3">
+      <div className="space-y-3 border-t border-line pt-3">
         <Toggle label="Show workspace" hint="Sample θ1, θ2 over their limits (top view)" checked={showWorkspace} onChange={setShowWorkspace} />
         <Toggle
           label="Trace end-effector"
@@ -163,7 +164,7 @@ export default function ScaraPage() {
       theory={
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">What is a SCARA?</h3>
+            <h3 className="font-semibold text-ink">What is a SCARA?</h3>
             <p>
               A <em>Selective Compliance Assembly Robot Arm</em> has two revolute joints with parallel vertical axes (shoulder θ₁ and elbow θ₂), a
               vertical prismatic joint (quill, d₃) and a final revolute roll joint (θ₄). All joint axes are parallel to the world z-axis, so the arm
@@ -173,7 +174,7 @@ export default function ScaraPage() {
           </div>
 
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Denavit–Hartenberg parameters</h3>
+            <h3 className="font-semibold text-ink">Denavit–Hartenberg parameters</h3>
             <p>
               Each link i is described by four numbers: joint angle θᵢ (rotation about zᵢ₋₁), link offset dᵢ (translation along zᵢ₋₁), link length aᵢ
               (translation along xᵢ) and link twist αᵢ (rotation about xᵢ). For a revolute joint θᵢ is the variable; for a prismatic joint dᵢ is. The
@@ -183,7 +184,7 @@ export default function ScaraPage() {
           </div>
 
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">The four link transforms (lab table)</h3>
+            <h3 className="font-semibold text-ink">The four link transforms (lab table)</h3>
             <p>
               With the table d₁ = 0.877 m, a₁ = 0.425 m, α₁ = π; a₂ = 0.375 m; d₃ variable; d₄ = 0.2 m (all other entries zero), the four transforms are:
             </p>
@@ -194,7 +195,7 @@ export default function ScaraPage() {
           </div>
 
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Closed-form result</h3>
+            <h3 className="font-semibold text-ink">Closed-form result</h3>
             <p>
               Because every twist is 0 or π, all z-axes stay vertical and the product can be multiplied out by hand. The twist α₁ = π makes z₁ point
               <em> downwards</em>, so d₃ and d₄ are subtracted from d₁ and the rotations θ₂ and θ₄ about the flipped axes enter with a negative sign:
@@ -213,7 +214,7 @@ export default function ScaraPage() {
         <div className="space-y-4">
           <SimulationLayout controls={controls}>
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs text-slate-500">
+              <div className="flex items-center justify-between text-xs text-muted">
                 <span>3D view · drag to orbit, scroll to zoom, right-drag to pan</span>
                 <span className="flex gap-3">
                   <span><span className="mr-1 inline-block h-2 w-3 bg-link1" />link 1</span>
@@ -222,11 +223,11 @@ export default function ScaraPage() {
                   <span><span className="mr-1 inline-block h-2 w-3 bg-ee" />tool</span>
                 </span>
               </div>
-              <div className="h-[440px] overflow-hidden rounded-lg border border-slate-800 bg-slate-950">
+              <div className="h-[440px] overflow-hidden rounded-lg border border-line bg-field">
                 <SceneBoundary
                   fallback={
-                    <div className="flex h-full flex-col items-center justify-center gap-1 p-6 text-center text-slate-400" ref={() => setSceneFailed(true)}>
-                      <div className="font-medium text-amber-400">3D view unavailable (WebGL could not be started)</div>
+                    <div className="flex h-full flex-col items-center justify-center gap-1 p-6 text-center text-muted" ref={() => setSceneFailed(true)}>
+                      <div className="font-medium text-mustardInk">3D view unavailable (WebGL could not be started)</div>
                       <div className="text-sm">The top view below and all numeric results still work.</div>
                     </div>
                   }
@@ -236,7 +237,7 @@ export default function ScaraPage() {
               </div>
               {(showWorkspace || trace || sceneFailed) && (
                 <div>
-                  <div className="mb-1 text-xs text-slate-500">
+                  <div className="mb-1 text-xs text-muted">
                     Top view (xy plane) · {showWorkspace && `${workspace.length} workspace samples shown in blue`}
                     {showWorkspace && trace && ' · '}
                     {trace && 'trail in yellow'}
@@ -250,8 +251,8 @@ export default function ScaraPage() {
           <div className="card">
             <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
               <div>
-                <h3 className="font-semibold text-white">D-H table</h3>
-                <p className="text-xs text-slate-500">Highlighted cells are the joint variables (driven by the sliders). Edit any other cell to change the robot.</p>
+                <h3 className="font-semibold text-ink">D-H table</h3>
+                <p className="text-xs text-muted">Highlighted cells are the joint variables (driven by the sliders). Edit any other cell to change the robot.</p>
               </div>
               <div className="flex gap-1.5">
                 <button type="button" className={['btn', isDefault ? 'btn-primary' : ''].join(' ')} onClick={() => setBase(SCARA_DEFAULT_TABLE)}>
@@ -270,18 +271,18 @@ export default function ScaraPage() {
         <div className="space-y-4">
           <div className="grid gap-4 lg:grid-cols-[auto_minmax(0,1fr)]">
             <div className="card">
-              <h3 className="mb-2 font-semibold text-white">End-effector transform</h3>
+              <h3 className="mb-2 font-semibold text-ink">End-effector transform</h3>
               <MatrixView values={T04} label="T₀₄" homogeneous />
-              <p className="mt-2 text-xs text-slate-500">
-                <span className="text-sky-200">rotation</span> · <span className="text-emerald-300">position (m)</span>
+              <p className="mt-2 text-xs text-muted">
+                <span className="text-cobalt">rotation</span> · <span className="text-leaf">position (m)</span>
               </p>
             </div>
 
             <div className="card">
-              <h3 className="mb-2 font-semibold text-white">Matrix result vs closed form</h3>
+              <h3 className="mb-2 font-semibold text-ink">Matrix result vs closed form</h3>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-slate-400">
+                  <tr className="text-left text-muted">
                     <th className="py-1 font-medium">Quantity</th>
                     <th className="py-1 text-right font-medium">From T₀₄</th>
                     <th className="py-1 text-right font-medium">Closed form</th>
@@ -297,11 +298,11 @@ export default function ScaraPage() {
                       ['roll φ (°)', rad2deg(pose.roll), rad2deg(closed.roll), rad2deg(diff.roll)],
                     ] as const
                   ).map(([name, a, b, d]) => (
-                    <tr key={name} className="border-t border-slate-800">
-                      <td className="py-1 font-sans text-slate-300">{name}</td>
-                      <td className="py-1 text-right text-white">{a.toFixed(3)}</td>
-                      <td className="py-1 text-right text-white">{closed.valid ? b.toFixed(3) : '—'}</td>
-                      <td className={['py-1 text-right', Math.abs(d) < 1e-6 ? 'text-emerald-400' : 'text-red-400'].join(' ')}>
+                    <tr key={name} className="border-t border-line">
+                      <td className="py-1 font-sans text-ink/80">{name}</td>
+                      <td className="py-1 text-right text-ink">{a.toFixed(3)}</td>
+                      <td className="py-1 text-right text-ink">{closed.valid ? b.toFixed(3) : '—'}</td>
+                      <td className={['py-1 text-right', Math.abs(d) < 1e-6 ? 'text-leaf' : 'text-tomato'].join(' ')}>
                         {closed.valid ? d.toExponential(1) : 'n/a'}
                       </td>
                     </tr>
@@ -317,26 +318,26 @@ export default function ScaraPage() {
                     <Equation tex={sym.roll} />
                   </>
                 ) : (
-                  <p className="text-amber-400">The closed form above assumes every twist α is 0° or 180°; the current table has a tilted joint axis, so only the matrix result applies.</p>
+                  <p className="text-mustardInk">The closed form above assumes every twist α is 0° or 180°; the current table has a tilted joint axis, so only the matrix result applies.</p>
                 )}
               </div>
             </div>
           </div>
 
           <div className="card">
-            <h3 className="mb-2 font-semibold text-white">Joint values</h3>
+            <h3 className="mb-2 font-semibold text-ink">Joint values</h3>
             <div className="mono grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-4">
               {SCARA_JOINT_CELLS.map((c, i) => (
-                <div key={c.label} className="flex justify-between border-b border-slate-800 py-1">
+                <div key={c.label} className="flex justify-between border-b border-line py-1">
                   <span style={{ color: LINK_COLORS[i] }}>{c.label}</span>
-                  <span className="text-white">{c.kind === 'revolute' ? `${rad2deg(q[i]).toFixed(3)} °` : `${q[i].toFixed(3)} m`}</span>
+                  <span className="text-ink">{c.kind === 'revolute' ? `${rad2deg(q[i]).toFixed(3)} °` : `${q[i].toFixed(3)} m`}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="card">
-            <h3 className="mb-3 font-semibold text-white">Intermediate frames</h3>
+            <h3 className="mb-3 font-semibold text-ink">Intermediate frames</h3>
             <div className="flex flex-wrap gap-6">
               {frames.slice(0, 3).map((f, i) => (
                 <MatrixView key={i} values={f} label={`T₀${['₁', '₂', '₃'][i]}`} homogeneous />

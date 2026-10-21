@@ -18,7 +18,7 @@ const LINKS: TwoLink = { l1: 1.0, l2: 0.8 };
 const TABLE = { x0: 0.4, x1: 1.55, y0: -0.8, y1: 0.8 };
 const BIN: [number, number] = [0.3, 1.35];
 const HOME: [number, number] = [-0.5, 1.2];
-const CLUSTER_COLORS = ['#3b82f6', '#f97316', '#22c55e', '#a855f7', '#eab308', '#06b6d4', '#ec4899', '#84cc16'];
+const CLUSTER_COLORS = ['#2F5FD0', '#E5533D', '#3F9B57', '#F2B33D', '#1F8A8A', '#8B5E3C', '#6B665C', '#B9321F'];
 
 type Stage = 'scatter' | 'cluster' | 'ik' | 'move-object' | 'grasp' | 'move-bin' | 'release' | 'home' | 'done';
 const STAGES: { id: Stage[]; label: string; exp: string }[] = [
@@ -252,27 +252,27 @@ export default function PipelinePage() {
       // table
       const [tx0, ty0] = t.toPixel(TABLE.x0, TABLE.y1);
       const [tx1, ty1] = t.toPixel(TABLE.x1, TABLE.y0);
-      ctx.fillStyle = '#1e293b';
+      ctx.fillStyle = '#E8E4DA';
       ctx.fillRect(tx0, ty0, tx1 - tx0, ty1 - ty0);
-      ctx.strokeStyle = '#475569';
+      ctx.strokeStyle = '#8A857A';
       ctx.lineWidth = 2;
       ctx.strokeRect(tx0, ty0, tx1 - tx0, ty1 - ty0);
-      ctx.fillStyle = '#64748b';
+      ctx.fillStyle = '#8A857A';
       ctx.font = '12px ui-sans-serif, system-ui';
       ctx.fillText('table', tx0 + 6, ty0 + 14);
       // bin
       const [bx, by] = t.toPixel(BIN[0], BIN[1]);
-      ctx.fillStyle = '#3f2d1a';
-      ctx.strokeStyle = '#eab308';
+      ctx.fillStyle = '#FBE9C8';
+      ctx.strokeStyle = '#F2B33D';
       ctx.fillRect(bx - 22, by - 22, 44, 44);
       ctx.strokeRect(bx - 22, by - 22, 44, 44);
-      ctx.fillStyle = '#eab308';
+      ctx.fillStyle = '#F2B33D';
       ctx.fillText(`bin · ${st.objects.filter((o) => o.collected).length}`, bx - 20, by - 28);
       // reach annulus
       const [ox, oy] = t.toPixel(0, 0);
       ctx.save();
       ctx.setLineDash([5, 5]);
-      ctx.strokeStyle = 'rgba(56,189,248,0.35)';
+      ctx.strokeStyle = 'rgba(47,95,208,0.35)';
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.arc(ox, oy, (LINKS.l1 + LINKS.l2) * t.scale, 0, Math.PI * 2);
@@ -283,7 +283,7 @@ export default function PipelinePage() {
         const label = st.labels ? st.labels[i] : st.km && st.km.phase !== 'init' ? st.km.labels[i] : -1;
         if (label >= 0 && st.objects[label]?.collected) return;
         const [px, py] = t.toPixel(p[0], p[1]);
-        ctx.fillStyle = label >= 0 ? CLUSTER_COLORS[label % CLUSTER_COLORS.length] : '#94a3b8';
+        ctx.fillStyle = label >= 0 ? CLUSTER_COLORS[label % CLUSTER_COLORS.length] : '#6B665C';
         ctx.beginPath();
         ctx.arc(px, py, 3, 0, Math.PI * 2);
         ctx.fill();
@@ -302,7 +302,7 @@ export default function PipelinePage() {
         ctx.lineTo(cx - 8, cy + 8);
         ctx.stroke();
         if (st.objects[j]) {
-          ctx.fillStyle = '#e2e8f0';
+          ctx.fillStyle = '#FFFFFF';
           ctx.font = 'bold 11px ui-sans-serif, system-ui';
           ctx.fillText(`${j + 1}${st.objects[j].q ? '' : ' ✗'}`, cx + 11, cy - 8);
         }
@@ -310,7 +310,7 @@ export default function PipelinePage() {
       // trajectory preview of the current move
       if (st.traj) {
         ctx.save();
-        ctx.strokeStyle = 'rgba(234,179,8,0.5)';
+        ctx.strokeStyle = 'rgba(242,179,61,0.5)';
         ctx.setLineDash([3, 4]);
         ctx.beginPath();
         for (let i = 0; i <= 40; i++) {
@@ -329,7 +329,7 @@ export default function PipelinePage() {
       for (let i = 0; i < 2; i++) {
         const [ax, ay] = t.toPixel(pts[i][0], pts[i][1]);
         const [cx2, cy2] = t.toPixel(pts[i + 1][0], pts[i + 1][1]);
-        ctx.strokeStyle = i === 0 ? '#3b82f6' : '#f97316';
+        ctx.strokeStyle = i === 0 ? '#2F5FD0' : '#E5533D';
         ctx.lineWidth = 12 - 3 * i;
         ctx.beginPath();
         ctx.moveTo(ax, ay);
@@ -338,8 +338,8 @@ export default function PipelinePage() {
       }
       for (const p of pts.slice(0, 2)) {
         const [px, py] = t.toPixel(p[0], p[1]);
-        ctx.fillStyle = '#e2e8f0';
-        ctx.strokeStyle = '#0f172a';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.strokeStyle = '#1C1B19';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(px, py, 7, 0, Math.PI * 2);
@@ -347,11 +347,11 @@ export default function PipelinePage() {
         ctx.stroke();
       }
       const [ex, ey] = t.toPixel(arm.tip[0], arm.tip[1]);
-      ctx.fillStyle = st.carrying ? CLUSTER_COLORS[st.current % CLUSTER_COLORS.length] : '#ef4444';
+      ctx.fillStyle = st.carrying ? CLUSTER_COLORS[st.current % CLUSTER_COLORS.length] : '#E5533D';
       ctx.beginPath();
       ctx.arc(ex, ey, st.carrying ? 9 : 6, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#94a3b8';
+      ctx.fillStyle = '#6B665C';
       ctx.font = '12px ui-sans-serif, system-ui';
       ctx.fillText(`${STAGES[stageIndex]?.label ?? 'done'}${st.traj && ['move-object', 'move-bin', 'home'].includes(st.stage) ? ` → ${st.traj.target} (${Math.min(st.st, st.traj.tf).toFixed(2)} / ${st.traj.tf} s)` : ''}`, 10, t.height - 10);
     },
@@ -377,7 +377,7 @@ export default function PipelinePage() {
             <li><strong>Planning</strong>: the two-link IK (L₁ = 1 m, L₂ = 0.8 m) gives the elbow-up or elbow-down angles for each centroid and for the bin; centroids outside the annulus are skipped.</li>
             <li><strong>Execution</strong>: every move is a rest-to-rest quintic in joint space, so velocity and acceleration are zero at pick and place; forward kinematics draws the resulting tip path (curved, as in experiment 5).</li>
           </ul>
-          <p className="text-slate-400">Everything reused: <span className="mono">kmeans.ts</span> (initialise, stepIteration, silhouette), <span className="mono">datasets.ts</span> (blobs), <span className="mono">planar.ts</span> via <span className="mono">trajectory.ts</span> (twoLinkIK, twoLinkFK, makeProfile). No math is duplicated here.</p>
+          <p className="text-muted">Everything reused: <span className="mono">kmeans.ts</span> (initialise, stepIteration, silhouette), <span className="mono">datasets.ts</span> (blobs), <span className="mono">planar.ts</span> via <span className="mono">trajectory.ts</span> (twoLinkIK, twoLinkFK, makeProfile). No math is duplicated here.</p>
         </div>
       }
       simulation={
@@ -387,8 +387,8 @@ export default function PipelinePage() {
               const active = i === stageIndex;
               const done = st.stage === 'done' || i < stageIndex;
               return (
-                <li key={g.label} className={['flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition', active ? 'bg-sky-600 text-white' : done ? 'bg-slate-800 text-emerald-300' : 'bg-slate-800/60 text-slate-500'].join(' ')}>
-                  <span className={['grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs font-bold', active ? 'bg-white text-sky-700' : done ? 'bg-emerald-500/20' : 'bg-slate-700'].join(' ')}>{done && !active ? '✓' : i + 1}</span>
+                <li key={g.label} className={['flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition', active ? 'bg-cobalt text-white' : done ? 'bg-sidebar text-leaf' : 'bg-sidebar text-muted'].join(' ')}>
+                  <span className={['grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs font-bold', active ? 'bg-white text-cobalt' : done ? 'bg-leaf/15' : 'bg-line'].join(' ')}>{done && !active ? '✓' : i + 1}</span>
                   <span className="leading-tight">
                     {g.label}
                     <span className="block text-[10px] opacity-70">{g.exp}{active && st.stage === 'cluster' && st.km ? ` · iteration ${st.km.iteration}` : ''}{active && st.current >= 0 && (st.stage === 'move-object' || st.stage === 'grasp' || st.stage === 'move-bin' || st.stage === 'release') ? ` · object ${st.current + 1} / ${st.objects.length}` : ''}</span>
@@ -399,7 +399,7 @@ export default function PipelinePage() {
           </ol>
           <div className="grid gap-4 lg:grid-cols-[300px_minmax(0,1fr)]">
             <div className="card space-y-3 self-start">
-              <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Scene</div>
+              <div className="text-xs font-semibold uppercase tracking-wider text-muted">Scene</div>
               <Slider label="Objects" value={settings.nObjects} min={2} max={6} step={1} decimals={0} onChange={(v) => update({ nObjects: v })} />
               <Slider label="Points per object" value={settings.perObject} min={8} max={60} step={1} decimals={0} onChange={(v) => update({ perObject: v })} />
               <Slider label="Object size (spread)" value={settings.spread} min={0.2} max={0.9} step={0.05} decimals={2} onChange={(v) => update({ spread: v })} />
@@ -407,10 +407,10 @@ export default function PipelinePage() {
                 <button type="button" className="btn" onClick={() => update({ seed: settings.seed + 1 })}>New scatter (seed {settings.seed + 1})</button>
               </div>
               <Toggle label="Choose k automatically" hint="silhouette score over k = 2…8 (Exp 10)" checked={settings.autoK} onChange={(v) => update({ autoK: v })} />
-              <div className="border-t border-slate-800 pt-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Arm and motion</div>
-              <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-800 p-1">
+              <div className="border-t border-line pt-3 text-xs font-semibold uppercase tracking-wider text-muted">Arm and motion</div>
+              <div className="grid grid-cols-2 gap-1 rounded-lg bg-sidebar p-1">
                 {(['up', 'down'] as Branch[]).map((b) => (
-                  <button key={b} type="button" onClick={() => update({ branch: b })} className={['rounded-md px-2 py-1 text-xs font-medium transition', settings.branch === b ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}>
+                  <button key={b} type="button" onClick={() => update({ branch: b })} className={['rounded-md px-2 py-1 text-xs font-medium transition', settings.branch === b ? 'bg-cobalt text-white' : 'text-ink/80 hover:bg-line'].join(' ')}>
                     IK elbow-{b}
                   </button>
                 ))}
@@ -418,15 +418,15 @@ export default function PipelinePage() {
               <Slider label="Move duration (quintic t_f)" value={settings.moveTime} min={0.5} max={4} step={0.1} unit="s" decimals={1} onChange={(v) => update({ moveTime: v })} />
               <Slider label="Playback speed" value={settings.speed} min={0.25} max={4} step={0.25} unit="×" decimals={2} onChange={(v) => update({ speed: v })} />
               <Toggle label="Repeat with new objects" checked={settings.loop} onChange={(v) => update({ loop: v })} />
-              <div className="border-t border-slate-800 pt-3">
+              <div className="border-t border-line pt-3">
                 <PlaybackControls loop={loop} label="Pipeline" />
               </div>
             </div>
             <div className="space-y-3">
               <Canvas2D draw={draw} view={{ cx: 0.55, cy: 0.33, scale: 185 }} aspect={16 / 10} interactive={false} />
               <div className="card">
-                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-slate-500">Event log</div>
-                <pre className="mono max-h-40 overflow-y-auto whitespace-pre-wrap text-xs leading-relaxed text-slate-300">{st.log.join('\n')}</pre>
+                <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted">Event log</div>
+                <pre className="mono max-h-40 overflow-y-auto whitespace-pre-wrap text-xs leading-relaxed text-ink/80">{st.log.join('\n')}</pre>
               </div>
             </div>
           </div>
@@ -435,11 +435,11 @@ export default function PipelinePage() {
       results={
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
           <div className="card">
-            <h3 className="mb-2 font-semibold text-white">Objects of cycle {st.cycle}</h3>
+            <h3 className="mb-2 font-semibold text-ink">Objects of cycle {st.cycle}</h3>
             {st.objects.length ? (
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-slate-400">
+                  <tr className="text-left text-muted">
                     <th className="py-1 font-medium">Object</th>
                     <th className="py-1 text-right font-medium">Points</th>
                     <th className="py-1 text-right font-medium">Centre x (m)</th>
@@ -449,34 +449,34 @@ export default function PipelinePage() {
                     <th className="py-1 font-medium">Status</th>
                   </tr>
                 </thead>
-                <tbody className="mono text-white">
+                <tbody className="mono text-ink">
                   {st.objects.map((o, i) => (
-                    <tr key={i} className={['border-t border-slate-800', i === st.current ? 'bg-sky-500/10' : ''].join(' ')}>
+                    <tr key={i} className={['border-t border-line', i === st.current ? 'bg-cobalt/10' : ''].join(' ')}>
                       <td className="py-1 font-sans"><span className="mr-2 inline-block h-2.5 w-2.5 rounded-sm" style={{ background: CLUSTER_COLORS[i % CLUSTER_COLORS.length] }} />{i + 1}</td>
                       <td className="py-1 text-right">{o.size}</td>
                       <td className="py-1 text-right">{o.centroid[0].toFixed(3)}</td>
                       <td className="py-1 text-right">{o.centroid[1].toFixed(3)}</td>
                       <td className="py-1 text-right">{o.q ? `${rad2deg(o.q[0]).toFixed(1)}°` : '—'}</td>
                       <td className="py-1 text-right">{o.q ? `${rad2deg(o.q[1]).toFixed(1)}°` : '—'}</td>
-                      <td className={['py-1 font-sans', o.collected ? 'text-emerald-400' : !o.q ? 'text-red-400' : i === st.current ? 'text-sky-300' : 'text-slate-400'].join(' ')}>{o.collected ? 'in bin' : !o.q ? 'unreachable' : i === st.current ? (st.carrying ? 'carrying' : 'approaching') : 'waiting'}</td>
+                      <td className={['py-1 font-sans', o.collected ? 'text-leaf' : !o.q ? 'text-tomato' : i === st.current ? 'text-cobalt' : 'text-muted'].join(' ')}>{o.collected ? 'in bin' : !o.q ? 'unreachable' : i === st.current ? (st.carrying ? 'carrying' : 'approaching') : 'waiting'}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <p className="text-sm text-slate-500">Objects appear here once k-means has converged.</p>
+              <p className="text-sm text-muted">Objects appear here once k-means has converged.</p>
             )}
           </div>
           <div className="card">
-            <h3 className="mb-2 font-semibold text-white">Totals</h3>
+            <h3 className="mb-2 font-semibold text-ink">Totals</h3>
             <div className="mono grid grid-cols-2 gap-y-1 text-sm">
-              <span className="text-slate-400">cycle</span><span className="text-white">{st.cycle}</span>
-              <span className="text-slate-400">cycle time</span><span className="text-white">{st.cycleTime.toFixed(1)} s</span>
-              <span className="text-slate-400">k-means iterations</span><span className="text-white">{st.km?.iteration ?? 0}</span>
-              <span className="text-slate-400">WCSS</span><span className="text-white">{st.km ? st.km.wcss.toFixed(4) : '—'}</span>
-              <span className="text-slate-400">objects collected</span><span className="text-emerald-400">{st.totalCollected}</span>
-              <span className="text-slate-400">arm now</span><span className="text-white">{fmtQ(st.q)}</span>
-              <span className="text-slate-400">tip</span><span className="text-white">({arm.tip[0].toFixed(3)}, {arm.tip[1].toFixed(3)})</span>
+              <span className="text-muted">cycle</span><span className="text-ink">{st.cycle}</span>
+              <span className="text-muted">cycle time</span><span className="text-ink">{st.cycleTime.toFixed(1)} s</span>
+              <span className="text-muted">k-means iterations</span><span className="text-ink">{st.km?.iteration ?? 0}</span>
+              <span className="text-muted">WCSS</span><span className="text-ink">{st.km ? st.km.wcss.toFixed(4) : '—'}</span>
+              <span className="text-muted">objects collected</span><span className="text-leaf">{st.totalCollected}</span>
+              <span className="text-muted">arm now</span><span className="text-ink">{fmtQ(st.q)}</span>
+              <span className="text-muted">tip</span><span className="text-ink">({arm.tip[0].toFixed(3)}, {arm.tip[1].toFixed(3)})</span>
             </div>
           </div>
         </div>

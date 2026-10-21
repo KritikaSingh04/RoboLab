@@ -15,7 +15,7 @@ export default function PlaybackControls({ loop, label }: { loop: FixedStepLoop;
         <button type="button" className="btn" onClick={loop.reset} aria-label="Reset">
           ↺ Reset
         </button>
-        <span className="mono ml-auto text-sm text-slate-400">
+        <span className="mono ml-auto text-sm text-muted">
           t = {loop.time.toFixed(3)} s · dt = {(1 / loop.dt).toFixed(0)} Hz
         </span>
       </div>

@@ -65,12 +65,12 @@ export default function LogicGatesTab() {
         for (let j = 0; j < cells; j++) {
           const x = lo + ((hi - lo) * (i + 0.5)) / cells;
           const yy = hi - ((hi - lo) * (j + 0.5)) / cells;
-          ctx.fillStyle = perceptronOutput(p, [x, yy]) ? 'rgba(249,115,22,0.18)' : 'rgba(59,130,246,0.18)';
+          ctx.fillStyle = perceptronOutput(p, [x, yy]) ? 'rgba(229,83,61,0.18)' : 'rgba(47,95,208,0.18)';
           ctx.fillRect(px0 + i * cw, py0 + j * ch, cw + 0.5, ch + 0.5);
         }
       }
       // separating line w1 x + w2 y + b = 0
-      ctx.strokeStyle = '#f8fafc';
+      ctx.strokeStyle = '#1C1B19';
       ctx.lineWidth = 2;
       ctx.beginPath();
       if (Math.abs(p.w[1]) > 1e-9) {
@@ -89,20 +89,20 @@ export default function LogicGatesTab() {
       ctx.stroke();
       GATE_INPUTS.forEach((x, i) => {
         const [px, py] = t.toPixel(x[0], x[1]);
-        ctx.fillStyle = y[i] ? '#f97316' : '#3b82f6';
+        ctx.fillStyle = y[i] ? '#E5533D' : '#2F5FD0';
         ctx.beginPath();
         ctx.arc(px, py, 11, 0, Math.PI * 2);
         ctx.fill();
         ctx.lineWidth = 3;
-        ctx.strokeStyle = outputs[i] === y[i] ? '#22c55e' : '#ef4444';
+        ctx.strokeStyle = outputs[i] === y[i] ? '#3F9B57' : '#E5533D';
         ctx.stroke();
-        ctx.fillStyle = '#0f172a';
+        ctx.fillStyle = '#1C1B19';
         ctx.font = 'bold 12px ui-sans-serif, system-ui';
         ctx.textAlign = 'center';
         ctx.fillText(String(y[i]), px, py + 4);
         ctx.textAlign = 'left';
       });
-      ctx.fillStyle = '#94a3b8';
+      ctx.fillStyle = '#6B665C';
       ctx.font = '12px ui-sans-serif, system-ui';
       ctx.fillText(`${gate}: target 1 = orange, 0 = blue · ring green = correct, red = wrong · line: w₁x₁ + w₂x₂ + b = 0`, 10, t.height - 10);
     },
@@ -136,20 +136,20 @@ export default function LogicGatesTab() {
       }
       GATE_INPUTS.forEach((x, i) => {
         const [px, py] = t.toPixel(x[0], x[1]);
-        ctx.fillStyle = GATES.XOR[i] ? '#f97316' : '#3b82f6';
+        ctx.fillStyle = GATES.XOR[i] ? '#E5533D' : '#2F5FD0';
         ctx.beginPath();
         ctx.arc(px, py, 11, 0, Math.PI * 2);
         ctx.fill();
         ctx.lineWidth = 3;
-        ctx.strokeStyle = (mlpOut[i] > 0.5 ? 1 : 0) === GATES.XOR[i] ? '#22c55e' : '#ef4444';
+        ctx.strokeStyle = (mlpOut[i] > 0.5 ? 1 : 0) === GATES.XOR[i] ? '#3F9B57' : '#E5533D';
         ctx.stroke();
-        ctx.fillStyle = '#0f172a';
+        ctx.fillStyle = '#1C1B19';
         ctx.font = 'bold 12px ui-sans-serif, system-ui';
         ctx.textAlign = 'center';
         ctx.fillText(String(GATES.XOR[i]), px, py + 4);
         ctx.textAlign = 'left';
       });
-      ctx.fillStyle = '#94a3b8';
+      ctx.fillStyle = '#6B665C';
       ctx.font = '12px ui-sans-serif, system-ui';
       ctx.fillText('2-2-1 MLP output over the input plane (orange = 1)', 10, t.height - 10);
     },
@@ -160,10 +160,10 @@ export default function LogicGatesTab() {
     <div className="space-y-4">
       <div className="card space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h3 className="font-semibold text-white">A. Single perceptron (step activation, perceptron learning rule)</h3>
-          <div className="grid grid-cols-4 gap-1 rounded-lg bg-slate-800 p-1">
+          <h3 className="font-semibold text-ink">A. Single perceptron (step activation, perceptron learning rule)</h3>
+          <div className="grid grid-cols-4 gap-1 rounded-lg bg-sidebar p-1">
             {GATE_NAMES.map((g) => (
-              <button key={g} type="button" onClick={() => selectGate(g)} className={['rounded-md px-3 py-1 text-sm font-medium transition', gate === g ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}>{g}</button>
+              <button key={g} type="button" onClick={() => selectGate(g)} className={['rounded-md px-3 py-1 text-sm font-medium transition', gate === g ? 'bg-cobalt text-white' : 'text-ink/80 hover:bg-line'].join(' ')}>{g}</button>
             ))}
           </div>
         </div>
@@ -176,64 +176,64 @@ export default function LogicGatesTab() {
               <button type="button" className="btn" onClick={() => reset()}>↺ Reset</button>
               <button type="button" className="btn" onClick={() => { setSeed(seed + 1); reset(seed + 1); }}>New seed</button>
             </div>
-            <div className="mono rounded-md bg-slate-900 px-3 py-2 text-sm">
-              <div className="flex justify-between"><span className="text-slate-400">w₁</span><span className="text-white">{p.w[0].toFixed(3)}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">w₂</span><span className="text-white">{p.w[1].toFixed(3)}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">b</span><span className="text-white">{p.b.toFixed(3)}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">epochs</span><span className="text-white">{errs.length}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">correct</span><span className={correct === 4 ? 'text-emerald-400' : 'text-amber-300'}>{correct} / 4</span></div>
+            <div className="mono rounded-md bg-field px-3 py-2 text-sm">
+              <div className="flex justify-between"><span className="text-muted">w₁</span><span className="text-ink">{p.w[0].toFixed(3)}</span></div>
+              <div className="flex justify-between"><span className="text-muted">w₂</span><span className="text-ink">{p.w[1].toFixed(3)}</span></div>
+              <div className="flex justify-between"><span className="text-muted">b</span><span className="text-ink">{p.b.toFixed(3)}</span></div>
+              <div className="flex justify-between"><span className="text-muted">epochs</span><span className="text-ink">{errs.length}</span></div>
+              <div className="flex justify-between"><span className="text-muted">correct</span><span className={correct === 4 ? 'text-leaf' : 'text-mustardInk'}>{correct} / 4</span></div>
             </div>
             <table className="mono w-full text-xs">
-              <thead><tr className="text-slate-400"><th className="font-normal">x₁</th><th className="font-normal">x₂</th><th className="font-normal">target</th><th className="font-normal">output</th></tr></thead>
-              <tbody className="text-center text-slate-200">
+              <thead><tr className="text-muted"><th className="font-normal">x₁</th><th className="font-normal">x₂</th><th className="font-normal">target</th><th className="font-normal">output</th></tr></thead>
+              <tbody className="text-center text-ink">
                 {GATE_INPUTS.map((x, i) => (
-                  <tr key={i} className={outputs[i] === y[i] ? '' : 'text-red-300'}><td>{x[0]}</td><td>{x[1]}</td><td>{y[i]}</td><td>{outputs[i]}</td></tr>
+                  <tr key={i} className={outputs[i] === y[i] ? '' : 'text-tomato'}><td>{x[0]}</td><td>{x[1]}</td><td>{y[i]}</td><td>{outputs[i]}</td></tr>
                 ))}
               </tbody>
             </table>
-            <p className="text-xs text-slate-500">{gate === 'XOR' ? 'XOR is not linearly separable: no single line can put both 1s on one side, so the perceptron never converges (training stops after 200 epochs).' : `${gate} is linearly separable: the rule converges once every point is on the correct side of the line.`}</p>
+            <p className="text-xs text-muted">{gate === 'XOR' ? 'XOR is not linearly separable: no single line can put both 1s on one side, so the perceptron never converges (training stops after 200 epochs).' : `${gate} is linearly separable: the rule converges once every point is on the correct side of the line.`}</p>
           </div>
           <Canvas2D draw={drawPerceptron} view={{ cx: 0.5, cy: 0.5, scale: 150 }} aspect={1} interactive={false} />
           <div>
-            <Plot title="Misclassified samples per epoch" data={errs.length ? errs.map((e) => ({ ...e })) : [{ epoch: 0, errors: 4 }]} xKey="epoch" xLabel="epoch" yDomain={[0, 4]} series={[{ key: 'errors', color: '#ef4444' }]} height={240} decimals={0} />
+            <Plot title="Misclassified samples per epoch" data={errs.length ? errs.map((e) => ({ ...e })) : [{ epoch: 0, errors: 4 }]} xKey="epoch" xLabel="epoch" yDomain={[0, 4]} series={[{ key: 'errors', color: '#E5533D' }]} height={240} decimals={0} />
           </div>
         </div>
       </div>
 
       <div className="card space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h3 className="font-semibold text-white">B. A 2-2-1 multilayer perceptron solves XOR</h3>
+          <h3 className="font-semibold text-ink">B. A 2-2-1 multilayer perceptron solves XOR</h3>
           <div className="flex flex-wrap items-center gap-1.5">
             <button type="button" className={['btn', trainer.running ? '' : 'btn-primary'].join(' ')} onClick={trainer.loop.toggle}>{trainer.running ? '❚❚ Pause' : '▶ Train'}</button>
             <button type="button" className="btn" onClick={() => trainer.reset()}>↺ Reset</button>
             <button type="button" className="btn" onClick={() => { setMlpSeed(mlpSeed + 1); trainer.reset(mlpSeed + 1); }}>New seed</button>
-            <span className="mono ml-2 text-xs text-slate-400">epoch {trainer.epoch} · loss {trainer.history.length ? trainer.history[trainer.history.length - 1].loss.toFixed(4) : '—'} · <span className={mlpCorrect === 4 ? 'text-emerald-400' : 'text-amber-300'}>{mlpCorrect} / 4 correct</span></span>
+            <span className="mono ml-2 text-xs text-muted">epoch {trainer.epoch} · loss {trainer.history.length ? trainer.history[trainer.history.length - 1].loss.toFixed(4) : '—'} · <span className={mlpCorrect === 4 ? 'text-leaf' : 'text-mustardInk'}>{mlpCorrect} / 4 correct</span></span>
           </div>
         </div>
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_280px]">
           <Canvas2D draw={drawMlp} view={{ cx: 0.5, cy: 0.5, scale: 150 }} aspect={1} interactive={false} />
           <div className="space-y-2">
             <NetworkDiagram net={trainer.net} inputLabels={['x₁', 'x₂']} outputLabels={['XOR']} height={200} />
-            <Plot data={trainer.history.map((h) => ({ epoch: h.epoch, loss: h.loss }))} xKey="epoch" xLabel="epoch" series={[{ key: 'loss', color: '#38bdf8' }]} height={150} decimals={4} />
+            <Plot data={trainer.history.map((h) => ({ epoch: h.epoch, loss: h.loss }))} xKey="epoch" xLabel="epoch" series={[{ key: 'loss', color: '#2F5FD0' }]} height={150} decimals={4} />
           </div>
           <div className="space-y-2">
             <table className="mono w-full text-xs">
-              <thead><tr className="text-slate-400"><th className="font-normal">x₁</th><th className="font-normal">x₂</th><th className="font-normal">XOR</th><th className="font-normal">net</th></tr></thead>
-              <tbody className="text-center text-slate-200">
+              <thead><tr className="text-muted"><th className="font-normal">x₁</th><th className="font-normal">x₂</th><th className="font-normal">XOR</th><th className="font-normal">net</th></tr></thead>
+              <tbody className="text-center text-ink">
                 {GATE_INPUTS.map((x, i) => (
-                  <tr key={i}><td>{x[0]}</td><td>{x[1]}</td><td>{GATES.XOR[i]}</td><td className={(mlpOut[i] > 0.5 ? 1 : 0) === GATES.XOR[i] ? 'text-emerald-300' : 'text-red-300'}>{mlpOut[i].toFixed(3)}</td></tr>
+                  <tr key={i}><td>{x[0]}</td><td>{x[1]}</td><td>{GATES.XOR[i]}</td><td className={(mlpOut[i] > 0.5 ? 1 : 0) === GATES.XOR[i] ? 'text-leaf' : 'text-tomato'}>{mlpOut[i].toFixed(3)}</td></tr>
                 ))}
               </tbody>
             </table>
-            <div className="mono text-xs text-slate-400">
-              <div className="text-slate-300">weights (hidden ← input)</div>
+            <div className="mono text-xs text-muted">
+              <div className="text-ink/80">weights (hidden ← input)</div>
               {trainer.net.W[0].map((row, j) => (
                 <div key={j}>h{j + 1}: [{row.map((w) => w.toFixed(2)).join(', ')}] b = {trainer.net.b[0][j].toFixed(2)}</div>
               ))}
-              <div className="mt-1 text-slate-300">output ← hidden</div>
+              <div className="mt-1 text-ink/80">output ← hidden</div>
               <div>y: [{trainer.net.W[1][0].map((w) => w.toFixed(2)).join(', ')}] b = {trainer.net.b[1][0].toFixed(2)}</div>
             </div>
-            <p className="text-xs text-slate-500">Two hidden tanh units each draw one line; the output unit combines the two half-planes, which a single line cannot do. If training stalls in a local minimum (2 of 4 correct), press New seed.</p>
+            <p className="text-xs text-muted">Two hidden tanh units each draw one line; the output unit combines the two half-planes, which a single line cannot do. If training stalls in a local minimum (2 of 4 correct), press New seed.</p>
           </div>
         </div>
       </div>

@@ -14,7 +14,7 @@ import { DEFAULT_ROBOT } from '../../lib/sim/diffDrive';
 import { SENSOR_ANGLES_DEG, SENSOR_NOISE } from '../../lib/sim/sensors';
 import { mulberry32 } from '../../lib/ai/random';
 import { deg2rad, rad2deg } from '../../lib/math/matrix';
-import ArenaCanvas, { type EditMode } from './ArenaCanvas';
+import ArenaCanvas, { CONTROLLER_COLORS, type EditMode } from './ArenaCanvas';
 
 const experiment = findExperiment('obstacle')!;
 const DT = 1 / 60;
@@ -104,17 +104,17 @@ export default function ObstaclePage() {
   const controls = (
     <div className="space-y-4">
       <div className="space-y-2">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Map</div>
-        <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-800 p-1">
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Map</div>
+        <div className="grid grid-cols-2 gap-1 rounded-lg bg-sidebar p-1">
           {MAPS.map((m) => (
-            <button key={m.id} type="button" onClick={() => loadMap(m.id)} className={['rounded-md px-2 py-1.5 text-sm font-medium transition', mapId === m.id ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}>
+            <button key={m.id} type="button" onClick={() => loadMap(m.id)} className={['rounded-md px-2 py-1.5 text-sm font-medium transition', mapId === m.id ? 'bg-cobalt text-white' : 'text-ink/80 hover:bg-line'].join(' ')}>
               {m.name}
             </button>
           ))}
         </div>
-        <p className="text-xs text-slate-500">{findMap(mapId).description}</p>
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Edit</div>
-        <div className="grid grid-cols-4 gap-1 rounded-lg bg-slate-800 p-1">
+        <p className="text-xs text-muted">{findMap(mapId).description}</p>
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Edit</div>
+        <div className="grid grid-cols-4 gap-1 rounded-lg bg-sidebar p-1">
           {(
             [
               ['select', 'Drag'],
@@ -123,7 +123,7 @@ export default function ObstaclePage() {
               ['erase', 'Erase'],
             ] as const
           ).map(([m, label]) => (
-            <button key={m} type="button" onClick={() => setEditMode(m)} className={['rounded-md px-1 py-1 text-xs font-medium transition', editMode === m ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}>
+            <button key={m} type="button" onClick={() => setEditMode(m)} className={['rounded-md px-1 py-1 text-xs font-medium transition', editMode === m ? 'bg-ink text-white' : 'text-ink/80 hover:bg-line'].join(' ')}>
               {label}
             </button>
           ))}
@@ -135,12 +135,12 @@ export default function ObstaclePage() {
         </div>
       </div>
 
-      <div className="space-y-2 border-t border-slate-800 pt-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Controller</div>
+      <div className="space-y-2 border-t border-line pt-3">
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Controller</div>
         <div className="space-y-1">
           {CONTROLLERS.map((c) => (
-            <button key={c.id} type="button" onClick={() => setControllerId(c.id)} className={['flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition', controllerId === c.id ? 'bg-slate-700 text-white ring-1 ring-sky-500/50' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'].join(' ')}>
-              <span className="inline-block h-3 w-3 rounded-full" style={{ background: c.color }} />
+            <button key={c.id} type="button" onClick={() => setControllerId(c.id)} className={['flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition', controllerId === c.id ? 'bg-line text-ink ring-1 ring-cobalt/30' : 'bg-sidebar text-ink/80 hover:bg-line'].join(' ')}>
+              <span className="inline-block h-3 w-3 rounded-full" style={{ background: CONTROLLER_COLORS[c.id] }} />
               {c.name}
             </button>
           ))}
@@ -150,13 +150,13 @@ export default function ObstaclePage() {
         <Toggle label="Show potential field" hint="arrows of F_att + F_rep" checked={showField} onChange={setShowField} />
       </div>
 
-      <div className="space-y-2 border-t border-slate-800 pt-3">
+      <div className="space-y-2 border-t border-line pt-3">
         <PlaybackControls loop={loop} label="Simulation" />
-        <div className="mono rounded-md bg-slate-900 px-3 py-2 text-xs text-slate-300">
-          <div className="flex justify-between"><span className="text-slate-500">status</span><span className={sim.reached ? 'text-emerald-400' : sim.stuck ? 'text-amber-300' : sim.colliding ? 'text-red-400' : 'text-white'}>{status}</span></div>
-          <div className="flex justify-between"><span className="text-slate-500">pose</span><span>({fmt(sim.pose.x)}, {fmt(sim.pose.y)}) {fmt(rad2deg(sim.pose.theta), 0)}°</span></div>
-          <div className="flex justify-between"><span className="text-slate-500">wheels vL / vR</span><span>{fmt(sim.wheels.vL)} / {fmt(sim.wheels.vR)} m/s</span></div>
-          <div className="mt-1 text-slate-400">{ctrlRef.current.status()}</div>
+        <div className="mono rounded-md bg-field px-3 py-2 text-xs text-ink/80">
+          <div className="flex justify-between"><span className="text-muted">status</span><span className={sim.reached ? 'text-leaf' : sim.stuck ? 'text-mustardInk' : sim.colliding ? 'text-tomato' : 'text-ink'}>{status}</span></div>
+          <div className="flex justify-between"><span className="text-muted">pose</span><span>({fmt(sim.pose.x)}, {fmt(sim.pose.y)}) {fmt(rad2deg(sim.pose.theta), 0)}°</span></div>
+          <div className="flex justify-between"><span className="text-muted">wheels vL / vR</span><span>{fmt(sim.wheels.vL)} / {fmt(sim.wheels.vR)} m/s</span></div>
+          <div className="mt-1 text-muted">{ctrlRef.current.status()}</div>
         </div>
       </div>
     </div>
@@ -174,13 +174,13 @@ export default function ObstaclePage() {
       theory={
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Differential-drive kinematics</h3>
+            <h3 className="font-semibold text-ink">Differential-drive kinematics</h3>
             <p>Two independently driven wheels, separated by L, give the body velocity v and turn rate ω; the pose integrates them with a fixed timestep:</p>
             <Equation tex={String.raw`v = \frac{v_R + v_L}{2},\qquad \omega = \frac{v_R - v_L}{L},\qquad \dot{x} = v\cos\theta,\quad \dot{y} = v\sin\theta,\quad \dot{\theta} = \omega`} />
             <p>The simulator integrates the arc exactly over each step (radius v/ω), which is stable even at high turn rates.</p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Range sensing</h3>
+            <h3 className="font-semibold text-ink">Range sensing</h3>
             <p>
               Each ultrasonic sensor is modelled as a ray from the body rim. Its reading is the distance to the first intersection with a wall
               segment or an obstacle (ray–segment and ray–circle tests), clipped at 2 m, plus ±2 cm uniform noise:
@@ -188,7 +188,7 @@ export default function ObstaclePage() {
             <Equation tex={String.raw`\mathbf{p}(t) = \mathbf{o} + t\,\mathbf{d},\qquad t_{\text{circle}} = \frac{-b - \sqrt{b^2 - 4c}}{2},\qquad t_{\text{segment}} = \frac{(\mathbf{a}-\mathbf{o})\times\mathbf{e}}{\mathbf{d}\times\mathbf{e}}`} />
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Controllers</h3>
+            <h3 className="font-semibold text-ink">Controllers</h3>
             <ol className="list-decimal space-y-1 pl-5">
               <li><strong>Reactive rules</strong>: drive to the goal with proportional heading control; when the front is blocked, turn to the more open side and follow the obstacle at a set distance until the direction to the goal is clear.</li>
               <li><strong>Fuzzy</strong>: the Mamdani rule base of experiment 7 maps (nearest range, bearing) to a steering angle and speed; the avoidance command is blended with goal seeking in proportion to how close the obstacle is.</li>
@@ -209,10 +209,10 @@ export default function ObstaclePage() {
             <ArenaCanvas map={map} sim={sim} controllerId={controllerId} showField={showField} overlays={showOverlays ? compare : null} editMode={editMode} onMapChange={onMapChange} />
             <div className="grid gap-3 md:grid-cols-2">
               <div className="card">
-                <Plot title="Sensor readings (m)" data={plotData.map((s) => ({ t: s.t, '−60°': s.s0, '−30°': s.s1, '0°': s.s2, '+30°': s.s3, '+60°': s.s4 }))} xKey="t" xLabel="t (s)" yDomain={[0, 2]} series={SENSOR_ANGLES_DEG.map((a, i) => ({ key: `${a > 0 ? '+' : a < 0 ? '−' : ''}${Math.abs(a)}°`, color: ['#a78bfa', '#38bdf8', '#eab308', '#f97316', '#ef4444'][i] }))} height={200} decimals={2} />
+                <Plot title="Sensor readings (m)" data={plotData.map((s) => ({ t: s.t, '−60°': s.s0, '−30°': s.s1, '0°': s.s2, '+30°': s.s3, '+60°': s.s4 }))} xKey="t" xLabel="t (s)" yDomain={[0, 2]} series={SENSOR_ANGLES_DEG.map((a, i) => ({ key: `${a > 0 ? '+' : a < 0 ? '−' : ''}${Math.abs(a)}°`, color: ['#1F8A8A', '#2F5FD0', '#F2B33D', '#E5533D', '#E5533D'][i] }))} height={200} decimals={2} />
               </div>
               <div className="card">
-                <Plot title="Wheel speeds (m/s)" data={plotData.map((s) => ({ t: s.t, vL: s.vL, vR: s.vR }))} xKey="t" xLabel="t (s)" series={[{ key: 'vL', color: '#38bdf8' }, { key: 'vR', color: '#f97316' }]} height={200} decimals={2} />
+                <Plot title="Wheel speeds (m/s)" data={plotData.map((s) => ({ t: s.t, vL: s.vL, vR: s.vR }))} xKey="t" xLabel="t (s)" series={[{ key: 'vL', color: '#2F5FD0' }, { key: 'vR', color: '#E5533D' }]} height={200} decimals={2} />
               </div>
             </div>
           </div>
@@ -222,22 +222,22 @@ export default function ObstaclePage() {
         <div className="space-y-4">
           <div className="grid gap-4 lg:grid-cols-[320px_minmax(0,1fr)]">
             <div className="card">
-              <h3 className="mb-2 font-semibold text-white">Current run</h3>
+              <h3 className="mb-2 font-semibold text-ink">Current run</h3>
               <div className="mono grid grid-cols-2 gap-y-1 text-sm">
-                <span className="text-slate-400">controller</span><span className="text-white">{CONTROLLERS.find((c) => c.id === controllerId)?.name}</span>
-                <span className="text-slate-400">status</span><span className="text-white">{status}</span>
-                <span className="text-slate-400">time</span><span className="text-white">{fmt(sim.t, 1)} s</span>
-                <span className="text-slate-400">path length</span><span className="text-white">{fmt(sim.pathLength)} m</span>
-                <span className="text-slate-400">collisions</span><span className={sim.collisions ? 'text-red-400' : 'text-emerald-400'}>{sim.collisions}</span>
-                <span className="text-slate-400">min clearance</span><span className={sim.minClearance < 0.1 ? 'text-amber-300' : 'text-white'}>{fmt(sim.minClearance)} m</span>
-                <span className="text-slate-400">straight-line distance</span><span className="text-white">{fmt(Math.hypot(map.goal[0] - map.start.x, map.goal[1] - map.start.y))} m</span>
+                <span className="text-muted">controller</span><span className="text-ink">{CONTROLLERS.find((c) => c.id === controllerId)?.name}</span>
+                <span className="text-muted">status</span><span className="text-ink">{status}</span>
+                <span className="text-muted">time</span><span className="text-ink">{fmt(sim.t, 1)} s</span>
+                <span className="text-muted">path length</span><span className="text-ink">{fmt(sim.pathLength)} m</span>
+                <span className="text-muted">collisions</span><span className={sim.collisions ? 'text-tomato' : 'text-leaf'}>{sim.collisions}</span>
+                <span className="text-muted">min clearance</span><span className={sim.minClearance < 0.1 ? 'text-mustardInk' : 'text-ink'}>{fmt(sim.minClearance)} m</span>
+                <span className="text-muted">straight-line distance</span><span className="text-ink">{fmt(Math.hypot(map.goal[0] - map.start.x, map.goal[1] - map.start.y))} m</span>
               </div>
             </div>
             <div className="card space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <h3 className="font-semibold text-white">Compare all controllers</h3>
-                  <p className="text-xs text-slate-500">Runs each controller headlessly on the current map (same start, goal, noise seed; 90 s limit) and overlays the paths.</p>
+                  <h3 className="font-semibold text-ink">Compare all controllers</h3>
+                  <p className="text-xs text-muted">Runs each controller headlessly on the current map (same start, goal, noise seed; 90 s limit) and overlays the paths.</p>
                 </div>
                 <div className="flex items-center gap-3">
                   {compare && <Toggle label="Overlay paths" checked={showOverlays} onChange={setShowOverlays} />}
@@ -247,7 +247,7 @@ export default function ObstaclePage() {
               {compare ? (
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left text-slate-400">
+                    <tr className="text-left text-muted">
                       <th className="py-1 font-medium">Controller</th>
                       <th className="py-1 font-medium">Result</th>
                       <th className="py-1 text-right font-medium">Time (s)</th>
@@ -260,12 +260,12 @@ export default function ObstaclePage() {
                     {compare.map((r) => {
                       const c = CONTROLLERS.find((k) => k.id === r.controller)!;
                       return (
-                        <tr key={r.controller} className="border-t border-slate-800 text-white">
-                          <td className="py-1 font-sans"><span className="mr-2 inline-block h-3 w-3 rounded-full align-middle" style={{ background: c.color }} />{c.name}</td>
-                          <td className={['py-1 font-sans', r.reached ? 'text-emerald-400' : 'text-amber-300'].join(' ')}>{r.reached ? 'goal reached' : r.stuck ? 'stuck (local minimum)' : 'timed out'}</td>
+                        <tr key={r.controller} className="border-t border-line text-ink">
+                          <td className="py-1 font-sans"><span className="mr-2 inline-block h-3 w-3 rounded-full align-middle" style={{ background: CONTROLLER_COLORS[c.id] }} />{c.name}</td>
+                          <td className={['py-1 font-sans', r.reached ? 'text-leaf' : 'text-mustardInk'].join(' ')}>{r.reached ? 'goal reached' : r.stuck ? 'stuck (local minimum)' : 'timed out'}</td>
                           <td className="py-1 text-right">{r.reached ? fmt(r.time, 1) : '—'}</td>
                           <td className="py-1 text-right">{fmt(r.pathLength)}</td>
-                          <td className={['py-1 text-right', r.collisions ? 'text-red-400' : ''].join(' ')}>{r.collisions}</td>
+                          <td className={['py-1 text-right', r.collisions ? 'text-tomato' : ''].join(' ')}>{r.collisions}</td>
                           <td className="py-1 text-right">{fmt(r.minClearance)}</td>
                         </tr>
                       );
@@ -273,7 +273,7 @@ export default function ObstaclePage() {
                   </tbody>
                 </table>
               ) : (
-                <p className="text-sm text-slate-500">Press Compare all to fill the table. Try it on the U-trap map.</p>
+                <p className="text-sm text-muted">Press Compare all to fill the table. Try it on the U-trap map.</p>
               )}
             </div>
           </div>

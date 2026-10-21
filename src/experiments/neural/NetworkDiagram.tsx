@@ -28,24 +28,24 @@ export default function NetworkDiagram({ net, inputLabels, outputLabels, height 
         const y1 = ys(l + 1);
         return M.map((row, j) =>
           row.map((w, i) => (
-            <line key={`${l}-${j}-${i}`} x1={xs[l]} y1={y0[i]} x2={xs[l + 1]} y2={y1[j]} stroke={w >= 0 ? '#38bdf8' : '#f97316'} strokeWidth={0.4 + (3.2 * Math.abs(w)) / maxW} opacity={0.25 + (0.7 * Math.abs(w)) / maxW} />
+            <line key={`${l}-${j}-${i}`} x1={xs[l]} y1={y0[i]} x2={xs[l + 1]} y2={y1[j]} stroke={w >= 0 ? '#2F5FD0' : '#E5533D'} strokeWidth={0.4 + (3.2 * Math.abs(w)) / maxW} opacity={0.25 + (0.7 * Math.abs(w)) / maxW} />
           )),
         );
       })}
       {layers.map((_, l) =>
         ys(l).map((y, j) => (
           <g key={`${l}-${j}`}>
-            <circle cx={xs[l]} cy={y} r={r} fill={l === 0 ? '#1e293b' : l === layers.length - 1 ? '#7f1d1d' : '#0f172a'} stroke={l === 0 ? '#94a3b8' : l === layers.length - 1 ? '#ef4444' : '#38bdf8'} strokeWidth={1.5} />
-            {l > 0 && r >= 7 && <text x={xs[l]} y={y + 3} fontSize="8" fill="#cbd5e1" textAnchor="middle" fontFamily="ui-monospace, monospace">{net.b[l - 1][j].toFixed(1)}</text>}
-            {l === 0 && inputLabels?.[j] && <text x={xs[l] - r - 4} y={y + 4} fontSize="11" fill="#cbd5e1" textAnchor="end">{inputLabels[j]}</text>}
-            {l === layers.length - 1 && outputLabels?.[j] && <text x={xs[l] + r + 4} y={y + 4} fontSize="11" fill="#cbd5e1">{outputLabels[j]}</text>}
+            <circle cx={xs[l]} cy={y} r={r} fill={l === 0 ? '#E8E4DA' : l === layers.length - 1 ? '#FBE3DE' : '#FFFFFF'} stroke={l === 0 ? '#6B665C' : l === layers.length - 1 ? '#E5533D' : '#2F5FD0'} strokeWidth={1.5} />
+            {l > 0 && r >= 7 && <text x={xs[l]} y={y + 3} fontSize="8" fill="#1C1B19" textAnchor="middle" fontFamily="ui-monospace, monospace">{net.b[l - 1][j].toFixed(1)}</text>}
+            {l === 0 && inputLabels?.[j] && <text x={xs[l] - r - 4} y={y + 4} fontSize="11" fill="#1C1B19" textAnchor="end">{inputLabels[j]}</text>}
+            {l === layers.length - 1 && outputLabels?.[j] && <text x={xs[l] + r + 4} y={y + 4} fontSize="11" fill="#1C1B19">{outputLabels[j]}</text>}
           </g>
         )),
       )}
       {layers.map((n, l) => (
-        <text key={l} x={xs[l]} y={H - 4} fontSize="10" fill="#64748b" textAnchor="middle">{l === 0 ? `input (${n})` : l === layers.length - 1 ? `output (${n})` : `hidden (${n})`}</text>
+        <text key={l} x={xs[l]} y={H - 4} fontSize="10" fill="#8A857A" textAnchor="middle">{l === 0 ? `input (${n})` : l === layers.length - 1 ? `output (${n})` : `hidden (${n})`}</text>
       ))}
-      <text x={W - 4} y={12} fontSize="9" fill="#64748b" textAnchor="end">blue = positive weight · orange = negative · width ∝ |w| · number = bias</text>
+      <text x={W - 4} y={12} fontSize="9" fill="#8A857A" textAnchor="end">blue = positive weight · orange = negative · width ∝ |w| · number = bias</text>
     </svg>
   );
 }

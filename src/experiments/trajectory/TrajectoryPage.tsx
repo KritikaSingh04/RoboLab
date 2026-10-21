@@ -97,10 +97,10 @@ export default function TrajectoryPage() {
     });
   }, [jointSamples, cartSamples]);
   const series = [
-    { key: 'θ1 joint', color: '#3b82f6' },
-    { key: 'θ2 joint', color: '#f97316' },
-    { key: 'θ1 Cartesian', color: '#3b82f6', dashed: true },
-    { key: 'θ2 Cartesian', color: '#f97316', dashed: true },
+    { key: 'θ1 joint', color: '#2F5FD0' },
+    { key: 'θ2 joint', color: '#E5533D' },
+    { key: 'θ1 Cartesian', color: '#2F5FD0', dashed: true },
+    { key: 'θ2 Cartesian', color: '#E5533D', dashed: true },
   ];
 
   // --- Comparison across methods ---------------------------------------------
@@ -122,11 +122,11 @@ export default function TrajectoryPage() {
   const controls = (
     <>
       <div className="space-y-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Start and end (joint space)</div>
-        <Slider label="θ1 start" color="#3b82f6" value={rad2deg(qStart[0])} min={-180} max={180} step={1} unit="°" decimals={1} onChange={(d) => setQStart([deg2rad(d), qStart[1]])} />
-        <Slider label="θ2 start" color="#f97316" value={rad2deg(qStart[1])} min={-180} max={180} step={1} unit="°" decimals={1} onChange={(d) => setQStart([qStart[0], deg2rad(d)])} />
-        <Slider label="θ1 end" color="#3b82f6" value={rad2deg(qEnd[0])} min={-180} max={180} step={1} unit="°" decimals={1} onChange={(d) => setQEnd([deg2rad(d), qEnd[1]])} />
-        <Slider label="θ2 end" color="#f97316" value={rad2deg(qEnd[1])} min={-180} max={180} step={1} unit="°" decimals={1} onChange={(d) => setQEnd([qEnd[0], deg2rad(d)])} />
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Start and end (joint space)</div>
+        <Slider label="θ1 start" color="#2F5FD0" value={rad2deg(qStart[0])} min={-180} max={180} step={1} unit="°" decimals={1} onChange={(d) => setQStart([deg2rad(d), qStart[1]])} />
+        <Slider label="θ2 start" color="#E5533D" value={rad2deg(qStart[1])} min={-180} max={180} step={1} unit="°" decimals={1} onChange={(d) => setQStart([qStart[0], deg2rad(d)])} />
+        <Slider label="θ1 end" color="#2F5FD0" value={rad2deg(qEnd[0])} min={-180} max={180} step={1} unit="°" decimals={1} onChange={(d) => setQEnd([deg2rad(d), qEnd[1]])} />
+        <Slider label="θ2 end" color="#E5533D" value={rad2deg(qEnd[1])} min={-180} max={180} step={1} unit="°" decimals={1} onChange={(d) => setQEnd([qEnd[0], deg2rad(d)])} />
         <div className="flex flex-wrap gap-1.5">
           <button type="button" className={['btn', pick === 'start' ? 'btn-primary' : ''].join(' ')} onClick={() => setPick(pick === 'start' ? 'none' : 'start')}>
             Click start point
@@ -135,20 +135,20 @@ export default function TrajectoryPage() {
             Click end point
           </button>
         </div>
-        <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-800 p-1">
+        <div className="grid grid-cols-2 gap-1 rounded-lg bg-sidebar p-1">
           {BRANCHES.map((b) => (
-            <button key={b} type="button" onClick={() => setBranch(b)} className={['rounded-md px-2 py-1 text-xs font-medium transition', branch === b ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}>
+            <button key={b} type="button" onClick={() => setBranch(b)} className={['rounded-md px-2 py-1 text-xs font-medium transition', branch === b ? 'bg-cobalt text-white' : 'text-ink/80 hover:bg-line'].join(' ')}>
               IK: {BRANCH_LABEL[b]}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="space-y-3 border-t border-slate-800 pt-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Time scaling</div>
-        <div className="grid grid-cols-3 gap-1 rounded-lg bg-slate-800 p-1">
+      <div className="space-y-3 border-t border-line pt-3">
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Time scaling</div>
+        <div className="grid grid-cols-3 gap-1 rounded-lg bg-sidebar p-1">
           {METHODS.map((m) => (
-            <button key={m} type="button" onClick={() => setMethod(m)} className={['rounded-md px-2 py-1.5 text-sm font-medium capitalize transition', method === m ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}>
+            <button key={m} type="button" onClick={() => setMethod(m)} className={['rounded-md px-2 py-1.5 text-sm font-medium capitalize transition', method === m ? 'bg-ink text-white' : 'text-ink/80 hover:bg-line'].join(' ')}>
               {m === 'lspb' ? 'LSPB' : m}
             </button>
           ))}
@@ -168,7 +168,7 @@ export default function TrajectoryPage() {
         )}
         {method === 'lspb' && <Slider label="Cruise velocity V" value={vmax} min={5} max={360} step={1} unit="°/s" decimals={0} onChange={setVmax} />}
         {profiles.some((p) => p.lspb?.clamped) && (
-          <ul className="space-y-1 text-xs text-amber-400">
+          <ul className="space-y-1 text-xs text-mustardInk">
             {profiles.map(
               (p, j) =>
                 p.lspb?.clamped && (
@@ -182,13 +182,13 @@ export default function TrajectoryPage() {
         )}
       </div>
 
-      <div className="space-y-3 border-t border-slate-800 pt-3">
+      <div className="space-y-3 border-t border-line pt-3">
         <PlaybackControls loop={loop} label="Animation" />
         <Slider label="Scrub t" value={t} min={0} max={tf} step={0.01} unit="s" decimals={2} onChange={loop.seek} />
       </div>
 
-      <div className="space-y-2 border-t border-slate-800 pt-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Link lengths</div>
+      <div className="space-y-2 border-t border-line pt-3">
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Link lengths</div>
         <div className="grid grid-cols-2 gap-2">
           <NumberInput label="L1" value={links.l1} min={0.05} max={3} step={0.05} unit="m" onChange={(v) => setLinks((l) => ({ ...l, l1: v }))} />
           <NumberInput label="L2" value={links.l2} min={0.05} max={3} step={0.05} unit="m" onChange={(v) => setLinks((l) => ({ ...l, l2: v }))} />
@@ -210,14 +210,14 @@ export default function TrajectoryPage() {
       theory={
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Why time scaling?</h3>
+            <h3 className="font-semibold text-ink">Why time scaling?</h3>
             <p>
               A trajectory is a path with a time law. Jumping directly from q₀ to q_f would need infinite velocity, so each joint follows a
               smooth function q(t) on [0, t_f] whose boundary values match the required position, velocity (and possibly acceleration).
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Cubic polynomial (4 constraints)</h3>
+            <h3 className="font-semibold text-ink">Cubic polynomial (4 constraints)</h3>
             <Equation tex={String.raw`q(t) = a_0 + a_1 t + a_2 t^2 + a_3 t^3,\qquad \Delta = q_f - q_0`} />
             <Equation tex={String.raw`a_0 = q_0,\quad a_1 = v_0,\quad a_2 = \frac{3\Delta - (2v_0 + v_f)t_f}{t_f^2},\quad a_3 = \frac{-2\Delta + (v_0 + v_f)t_f}{t_f^3}`} />
             <p>
@@ -226,13 +226,13 @@ export default function TrajectoryPage() {
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Quintic polynomial (6 constraints)</h3>
+            <h3 className="font-semibold text-ink">Quintic polynomial (6 constraints)</h3>
             <Equation tex={String.raw`q(t) = \sum_{k=0}^{5} a_k t^k,\qquad a_0 = q_0,\quad a_1 = v_0,\quad a_2 = \tfrac{1}{2}\alpha_0`} />
             <Equation tex={String.raw`a_3 = \frac{20\Delta - (8v_f + 12v_0)t_f - (3\alpha_0 - \alpha_f)t_f^2}{2t_f^3},\quad a_4 = \frac{-30\Delta + (14v_f + 16v_0)t_f + (3\alpha_0 - 2\alpha_f)t_f^2}{2t_f^4},\quad a_5 = \frac{12\Delta - 6(v_f + v_0)t_f - (\alpha_0 - \alpha_f)t_f^2}{2t_f^5}`} />
             <p>Adding the acceleration constraints makes q(t) C²; the rest-to-rest profile is 10τ³ − 15τ⁴ + 6τ⁵ with τ = t/t_f.</p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">LSPB / trapezoidal velocity</h3>
+            <h3 className="font-semibold text-ink">LSPB / trapezoidal velocity</h3>
             <p>
               Accelerate at constant α for a blend time t_b, cruise at V, decelerate symmetrically. Choosing V fixes the blend time; the
               profile is feasible only for Δ/t_f &lt; V ≤ 2Δ/t_f (the upper limit is the triangular profile).
@@ -241,7 +241,7 @@ export default function TrajectoryPage() {
             <Equation tex={String.raw`q(t) = \begin{cases} q_0 + \tfrac{1}{2}\alpha t^2 & 0 \le t \le t_b \\[4pt] q_0 + \tfrac{1}{2}\alpha t_b^2 + V(t - t_b) & t_b < t \le t_f - t_b \\[4pt] q_f - \tfrac{1}{2}\alpha (t_f - t)^2 & t_f - t_b < t \le t_f \end{cases}`} />
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Joint space versus Cartesian space</h3>
+            <h3 className="font-semibold text-ink">Joint space versus Cartesian space</h3>
             <p>
               Interpolating the joint angles gives smooth joint motion but a curved tip path. Interpolating the tip along a straight line with the
               same time law s(t) ∈ [0, 1] and solving the inverse kinematics at every instant gives a straight path, but the joint velocities and
@@ -254,22 +254,22 @@ export default function TrajectoryPage() {
       simulation={
         <SimulationLayout controls={controls}>
           <div className="space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
               <span>
                 <span className="mr-3"><span className="mr-1 inline-block h-2 w-3 bg-link1" />link 1</span>
                 <span className="mr-3"><span className="mr-1 inline-block h-2 w-3 bg-link2" />link 2</span>
                 <span className="mr-3"><span className="mr-1 inline-block h-2 w-3 bg-ee" />tip</span>
-                <span className="mr-3"><span className="mr-1 inline-block h-2 w-3" style={{ background: '#a78bfa' }} />joint-space path</span>
-                <span><span className="mr-1 inline-block h-2 w-3" style={{ background: '#22d3ee' }} />Cartesian path</span>
+                <span className="mr-3"><span className="mr-1 inline-block h-2 w-3" style={{ background: '#1F8A8A' }} />joint-space path</span>
+                <span><span className="mr-1 inline-block h-2 w-3" style={{ background: '#F2B33D' }} />Cartesian path</span>
               </span>
               <span className="mono">t = {t.toFixed(3)} s / {tf.toFixed(1)} s · {METHOD_LABEL[method]}</span>
             </div>
             <div className="grid gap-3 md:grid-cols-2">
-              <ArmCanvas title="(a) Joint-space interpolation" links={links} samples={jointSamples} q={qJoint} t={t} pathColor="#a78bfa" start={pStart} end={pEnd} onPick={onPick} pickLabel={pick !== 'none' ? `click to set the ${pick} point (${BRANCH_LABEL[branch]})` : undefined} />
-              <ArmCanvas title="(b) Cartesian straight line + IK" links={links} samples={cartSamples} q={qCart} t={t} pathColor="#22d3ee" start={pStart} end={pEnd} onPick={onPick} pickLabel={pick !== 'none' ? `click to set the ${pick} point (${BRANCH_LABEL[branch]})` : undefined} />
+              <ArmCanvas title="(a) Joint-space interpolation" links={links} samples={jointSamples} q={qJoint} t={t} pathColor="#1F8A8A" start={pStart} end={pEnd} onPick={onPick} pickLabel={pick !== 'none' ? `click to set the ${pick} point (${BRANCH_LABEL[branch]})` : undefined} />
+              <ArmCanvas title="(b) Cartesian straight line + IK" links={links} samples={cartSamples} q={qCart} t={t} pathColor="#F2B33D" start={pStart} end={pEnd} onPick={onPick} pickLabel={pick !== 'none' ? `click to set the ${pick} point (${BRANCH_LABEL[branch]})` : undefined} />
             </div>
             {cartUnreachable > 0 && (
-              <p className="text-sm text-red-400">
+              <p className="text-sm text-tomato">
                 The straight line leaves the workspace for {cartUnreachable} of {N} samples (shown in red): the Cartesian trajectory cannot be executed
                 in full. The joint-space trajectory is always feasible.
               </p>
@@ -292,14 +292,14 @@ export default function TrajectoryPage() {
               </div>
             ))}
           </div>
-          <p className="text-xs text-slate-500">Solid: joint-space profiles (analytic). Dashed: joint angles needed for the Cartesian straight line (IK, derivatives by finite differences). The vertical marker follows the animation.</p>
+          <p className="text-xs text-muted">Solid: joint-space profiles (analytic). Dashed: joint angles needed for the Cartesian straight line (IK, derivatives by finite differences). The vertical marker follows the animation.</p>
 
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="card">
-              <h3 className="mb-2 font-semibold text-white">{METHOD_LABEL[method]}: coefficients</h3>
+              <h3 className="mb-2 font-semibold text-ink">{METHOD_LABEL[method]}: coefficients</h3>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-slate-400">
+                  <tr className="text-left text-muted">
                     <th className="py-1 font-medium">Coefficient</th>
                     <th className="py-1 text-right font-medium">Joint 1 (rad, s)</th>
                     <th className="py-1 text-right font-medium">Joint 2 (rad, s)</th>
@@ -308,25 +308,25 @@ export default function TrajectoryPage() {
                 </thead>
                 <tbody className="mono">
                   {profiles[0].coeffs.map((c, i) => (
-                    <tr key={c.name} className="border-t border-slate-800">
-                      <td className="py-1 font-sans text-slate-300">{c.name}</td>
-                      <td className="py-1 text-right text-white">{fmt(c.value, 4)}</td>
-                      <td className="py-1 text-right text-white">{fmt(profiles[1].coeffs[i]?.value ?? NaN, 4)}</td>
-                      <td className="py-1 text-right text-slate-400">{fmt(scaling.coeffs[i]?.value ?? NaN, 4)}</td>
+                    <tr key={c.name} className="border-t border-line">
+                      <td className="py-1 font-sans text-ink/80">{c.name}</td>
+                      <td className="py-1 text-right text-ink">{fmt(c.value, 4)}</td>
+                      <td className="py-1 text-right text-ink">{fmt(profiles[1].coeffs[i]?.value ?? NaN, 4)}</td>
+                      <td className="py-1 text-right text-muted">{fmt(scaling.coeffs[i]?.value ?? NaN, 4)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-muted">
                 Δ₁ = {fmt(rad2deg(qEnd[0] - qStart[0]), 2)}°, Δ₂ = {fmt(rad2deg(qEnd[1] - qStart[1]), 2)}°, t_f = {tf.toFixed(2)} s. Tip moves from ({fmt(pStart[0])}, {fmt(pStart[1])}) to ({fmt(pEnd[0])}, {fmt(pEnd[1])}) m.
               </p>
             </div>
 
             <div className="card">
-              <h3 className="mb-2 font-semibold text-white">Method comparison (same move, worst joint)</h3>
+              <h3 className="mb-2 font-semibold text-ink">Method comparison (same move, worst joint)</h3>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-slate-400">
+                  <tr className="text-left text-muted">
                     <th className="py-1 font-medium">Method</th>
                     <th className="py-1 text-right font-medium">max |q̇| (°/s)</th>
                     <th className="py-1 text-right font-medium">max |q̈| (°/s²)</th>
@@ -336,7 +336,7 @@ export default function TrajectoryPage() {
                 </thead>
                 <tbody className="mono">
                   {comparison.map((c) => (
-                    <tr key={c.method} className={['border-t border-slate-800', c.method === method ? 'text-white' : 'text-slate-400'].join(' ')}>
+                    <tr key={c.method} className={['border-t border-line', c.method === method ? 'text-ink' : 'text-muted'].join(' ')}>
                       <td className="py-1 font-sans capitalize">{c.method === 'lspb' ? 'LSPB' : c.method}</td>
                       <td className="py-1 text-right">{fmt(rad2deg(c.vMax), 2)}</td>
                       <td className="py-1 text-right">{fmt(rad2deg(c.aMax), 2)}</td>
@@ -346,7 +346,7 @@ export default function TrajectoryPage() {
                   ))}
                 </tbody>
               </table>
-              <p className="mt-2 text-xs text-slate-500">LSPB uses the cruise velocity set above (clamped into its feasible range). The quintic trades a higher peak velocity for continuous acceleration.</p>
+              <p className="mt-2 text-xs text-muted">LSPB uses the cruise velocity set above (clamped into its feasible range). The quintic trades a higher peak velocity for continuous acceleration.</p>
             </div>
           </div>
         </div>

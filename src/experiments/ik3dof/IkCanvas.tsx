@@ -23,7 +23,7 @@ interface Props {
   onDrawEnd: () => void;
 }
 
-const LINK_COLORS = ['#3b82f6', '#f97316', '#22c55e'];
+const LINK_COLORS = ['#2F5FD0', '#E5533D', '#3F9B57'];
 
 function drawArm(ctx: CanvasRenderingContext2D, t: Transform, joints: [number, number][], alpha: number) {
   ctx.save();
@@ -41,8 +41,8 @@ function drawArm(ctx: CanvasRenderingContext2D, t: Transform, joints: [number, n
   }
   for (let i = 0; i < 3; i++) {
     const [px, py] = t.toPixel(joints[i][0], joints[i][1]);
-    ctx.fillStyle = i === 0 ? '#94a3b8' : '#e2e8f0';
-    ctx.strokeStyle = '#0f172a';
+    ctx.fillStyle = i === 0 ? '#6B665C' : '#FFFFFF';
+    ctx.strokeStyle = '#1C1B19';
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(px, py, i === 0 ? 8 : 6, 0, Math.PI * 2);
@@ -50,7 +50,7 @@ function drawArm(ctx: CanvasRenderingContext2D, t: Transform, joints: [number, n
     ctx.stroke();
   }
   const [ex, ey] = t.toPixel(joints[3][0], joints[3][1]);
-  ctx.fillStyle = '#ef4444';
+  ctx.fillStyle = '#E5533D';
   ctx.beginPath();
   ctx.arc(ex, ey, 6, 0, Math.PI * 2);
   ctx.fill();
@@ -66,12 +66,12 @@ export default function IkCanvas({ links, pose, ik, active, showGhost, mode, dra
       const ann = reachableAnnulus(links, pose.phi);
       const [cx, cy] = t.toPixel(ann.cx, ann.cy);
       ctx.save();
-      ctx.fillStyle = 'rgba(56, 189, 248, 0.10)';
+      ctx.fillStyle = 'rgba(47, 95, 208, 0.10)';
       ctx.beginPath();
       ctx.arc(cx, cy, ann.rMax * t.scale, 0, Math.PI * 2);
       ctx.arc(cx, cy, ann.rMin * t.scale, 0, Math.PI * 2, true);
       ctx.fill('evenodd');
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+      ctx.strokeStyle = 'rgba(47, 95, 208, 0.55)';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(cx, cy, ann.rMax * t.scale, 0, Math.PI * 2);
@@ -83,12 +83,12 @@ export default function IkCanvas({ links, pose, ik, active, showGhost, mode, dra
       }
       const [ox, oy] = t.toPixel(0, 0);
       ctx.setLineDash([5, 5]);
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.5)';
+      ctx.strokeStyle = 'rgba(138, 133, 122, 0.5)';
       ctx.beginPath();
       ctx.arc(ox, oy, maxReach(links) * t.scale, 0, Math.PI * 2);
       ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = '#64748b';
+      ctx.fillStyle = '#8A857A';
       ctx.font = '12px ui-sans-serif, system-ui';
       ctx.textAlign = 'left';
       ctx.fillText(`reachable for φ = ${((pose.phi * 180) / Math.PI).toFixed(1)}°`, cx + ann.rMax * t.scale * 0.72, cy - ann.rMax * t.scale * 0.72);
@@ -98,7 +98,7 @@ export default function IkCanvas({ links, pose, ik, active, showGhost, mode, dra
       const poly = path.length > 1 ? path : drawing;
       if (poly.length > 1) {
         ctx.save();
-        ctx.strokeStyle = '#a78bfa';
+        ctx.strokeStyle = '#1F8A8A';
         ctx.lineWidth = 2.5;
         ctx.lineJoin = 'round';
         ctx.beginPath();
@@ -109,7 +109,7 @@ export default function IkCanvas({ links, pose, ik, active, showGhost, mode, dra
         });
         ctx.stroke();
         if (progress !== null && path.length > 1) {
-          ctx.strokeStyle = '#c4b5fd';
+          ctx.strokeStyle = '#1F8A8A';
           ctx.lineWidth = 4;
           ctx.beginPath();
           let started = false;
@@ -138,7 +138,7 @@ export default function IkCanvas({ links, pose, ik, active, showGhost, mode, dra
           const [ax, ay] = t.toPixel(near.fk.pose.x, near.fk.pose.y);
           const [bx, by] = t.toPixel(pose.x, pose.y);
           ctx.save();
-          ctx.strokeStyle = '#ef4444';
+          ctx.strokeStyle = '#E5533D';
           ctx.setLineDash([4, 4]);
           ctx.lineWidth = 1.5;
           ctx.beginPath();
@@ -151,7 +151,7 @@ export default function IkCanvas({ links, pose, ik, active, showGhost, mode, dra
 
       // Target
       const [tx, ty] = t.toPixel(pose.x, pose.y);
-      const color = ik.reachable ? '#eab308' : '#ef4444';
+      const color = ik.reachable ? '#F2B33D' : '#E5533D';
       ctx.save();
       ctx.strokeStyle = color;
       ctx.fillStyle = color;
@@ -176,7 +176,7 @@ export default function IkCanvas({ links, pose, ik, active, showGhost, mode, dra
       ctx.restore();
 
       // Mode hint
-      ctx.fillStyle = '#64748b';
+      ctx.fillStyle = '#8A857A';
       ctx.font = '12px ui-sans-serif, system-ui';
       ctx.textAlign = 'left';
       ctx.fillText(mode === 'target' ? 'click / drag anywhere to move the target' : 'drag to draw a path', 10, t.height - 10);

@@ -8,18 +8,12 @@ import type { Surface } from '../../lib/ai/fuzzy';
 
 /** Viridis-like colour ramp for t ∈ [0, 1]. */
 export function ramp(t: number): [number, number, number] {
+  // cobalt → leaf → mustard → tomato (no purple, readable on a light background)
   const stops: [number, number, number][] = [
-    [0.267, 0.005, 0.329],
-    [0.283, 0.141, 0.458],
-    [0.254, 0.265, 0.53],
-    [0.207, 0.372, 0.553],
-    [0.164, 0.471, 0.558],
-    [0.128, 0.567, 0.551],
-    [0.135, 0.659, 0.518],
-    [0.267, 0.749, 0.441],
-    [0.478, 0.821, 0.318],
-    [0.741, 0.873, 0.15],
-    [0.993, 0.906, 0.144],
+    [0.184, 0.373, 0.816],
+    [0.247, 0.608, 0.341],
+    [0.949, 0.702, 0.239],
+    [0.898, 0.325, 0.239],
   ];
   const u = Math.min(1, Math.max(0, t)) * (stops.length - 1);
   const i = Math.min(stops.length - 2, Math.floor(u));
@@ -72,7 +66,7 @@ function Mesh({ surface }: { surface: Surface }) {
         <meshStandardMaterial vertexColors side={DoubleSide} roughness={0.7} metalness={0.05} />
       </mesh>
       <mesh geometry={geometry}>
-        <meshBasicMaterial wireframe color="#0f172a" transparent opacity={0.25} />
+        <meshBasicMaterial wireframe color="#1C1B19" transparent opacity={0.25} />
       </mesh>
     </group>
   );
@@ -105,7 +99,7 @@ export default function SurfacePlot({ surface, aLabel, bLabel, zLabel, point, mo
         ctx.fillStyle = `rgb(${r * 255},${g * 255},${b * 255})`;
         ctx.fillRect(right + 16, bottom - ((k + 1) * (bottom - top)) / 100, 14, (bottom - top) / 100 + 0.5);
       }
-      ctx.fillStyle = '#94a3b8';
+      ctx.fillStyle = '#6B665C';
       ctx.font = '11px ui-monospace, monospace';
       ctx.textAlign = 'left';
       ctx.fillText(surface.max.toFixed(1), right + 34, top + 10);
@@ -128,16 +122,16 @@ export default function SurfacePlot({ surface, aLabel, bLabel, zLabel, point, mo
       if (point) {
         const px = left + ((point.a - surface.a[0]) / (surface.a[n - 1] - surface.a[0])) * (right - left);
         const py = bottom - ((point.b - surface.b[0]) / (surface.b[m - 1] - surface.b[0])) * (bottom - top);
-        ctx.strokeStyle = '#ef4444';
+        ctx.strokeStyle = '#E5533D';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(px, py, 7, 0, Math.PI * 2);
         ctx.stroke();
-        ctx.fillStyle = '#fca5a5';
+        ctx.fillStyle = '#E5533D';
         ctx.textAlign = 'left';
         ctx.fillText(`${point.z.toFixed(2)}`, px + 10, py - 8);
       }
-      ctx.fillStyle = '#cbd5e1';
+      ctx.fillStyle = '#1C1B19';
       ctx.font = 'bold 12px ui-sans-serif, system-ui';
       ctx.textAlign = 'left';
       ctx.fillText(zLabel, left, top + 12 - 14 + 12);
@@ -154,26 +148,26 @@ export default function SurfacePlot({ surface, aLabel, bLabel, zLabel, point, mo
     : null;
 
   return (
-    <div className="h-[380px] overflow-hidden rounded-lg border border-slate-800 bg-slate-950">
+    <div className="h-[380px] overflow-hidden rounded-lg border border-line bg-field">
       <SceneBoundary fallback={<Canvas2D draw={heat} showGrid={false} showAxes={false} interactive={false} aspect={16 / 10} />}>
         <Canvas dpr={[1, 2]} gl={{ preserveDrawingBuffer: true, antialias: true }} camera={{ position: [1.3, 0.9, 1.3], fov: 40 }}>
-          <color attach="background" args={['#020617']} />
+          <color attach="background" args={['#FBFAF7']} />
           <ambientLight intensity={0.7} />
           <directionalLight position={[2, 3, 2]} intensity={0.9} />
           <directionalLight position={[-2, 1, -1]} intensity={0.3} />
           <Mesh surface={surface} />
           {/* axes */}
-          <Line points={[[-0.5, 0, -0.5], [0.5, 0, -0.5]]} color="#94a3b8" lineWidth={1.5} />
-          <Line points={[[-0.5, 0, -0.5], [-0.5, 0, 0.5]]} color="#94a3b8" lineWidth={1.5} />
-          <Line points={[[-0.5, 0, -0.5], [-0.5, 0.6, -0.5]]} color="#94a3b8" lineWidth={1.5} />
-          <Html position={[0.55, 0, -0.5]} center style={{ pointerEvents: 'none' }}><span className="whitespace-nowrap rounded bg-slate-900/80 px-1 text-[11px] text-slate-200">{aLabel} → {surface.a[n - 1]}</span></Html>
-          <Html position={[-0.5, 0, 0.6]} center style={{ pointerEvents: 'none' }}><span className="whitespace-nowrap rounded bg-slate-900/80 px-1 text-[11px] text-slate-200">{bLabel} → {surface.b[m - 1]}</span></Html>
-          <Html position={[-0.5, 0.68, -0.5]} center style={{ pointerEvents: 'none' }}><span className="whitespace-nowrap rounded bg-slate-900/80 px-1 text-[11px] text-slate-200">{zLabel}: {surface.min.toFixed(1)} … {surface.max.toFixed(1)}</span></Html>
-          <Html position={[-0.5, -0.06, -0.5]} center style={{ pointerEvents: 'none' }}><span className="whitespace-nowrap rounded bg-slate-900/80 px-1 text-[11px] text-slate-400">({surface.a[0]}, {surface.b[0]})</span></Html>
+          <Line points={[[-0.5, 0, -0.5], [0.5, 0, -0.5]]} color="#6B665C" lineWidth={1.5} />
+          <Line points={[[-0.5, 0, -0.5], [-0.5, 0, 0.5]]} color="#6B665C" lineWidth={1.5} />
+          <Line points={[[-0.5, 0, -0.5], [-0.5, 0.6, -0.5]]} color="#6B665C" lineWidth={1.5} />
+          <Html position={[0.55, 0, -0.5]} center style={{ pointerEvents: 'none' }}><span className="whitespace-nowrap rounded bg-white px-1 text-[11px] text-ink">{aLabel} → {surface.a[n - 1]}</span></Html>
+          <Html position={[-0.5, 0, 0.6]} center style={{ pointerEvents: 'none' }}><span className="whitespace-nowrap rounded bg-white px-1 text-[11px] text-ink">{bLabel} → {surface.b[m - 1]}</span></Html>
+          <Html position={[-0.5, 0.68, -0.5]} center style={{ pointerEvents: 'none' }}><span className="whitespace-nowrap rounded bg-white px-1 text-[11px] text-ink">{zLabel}: {surface.min.toFixed(1)} … {surface.max.toFixed(1)}</span></Html>
+          <Html position={[-0.5, -0.06, -0.5]} center style={{ pointerEvents: 'none' }}><span className="whitespace-nowrap rounded bg-white px-1 text-[11px] text-muted">({surface.a[0]}, {surface.b[0]})</span></Html>
           {pt && (
             <mesh position={pt}>
               <sphereGeometry args={[0.018, 16, 16]} />
-              <meshStandardMaterial color="#ef4444" emissive="#ef4444" emissiveIntensity={0.6} />
+              <meshStandardMaterial color="#E5533D" emissive="#E5533D" emissiveIntensity={0.6} />
             </mesh>
           )}
           <OrbitControls makeDefault target={[0, 0.25, 0]} enableDamping dampingFactor={0.1} minDistance={0.6} maxDistance={5} />

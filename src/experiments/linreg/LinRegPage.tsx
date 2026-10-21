@@ -170,18 +170,18 @@ export default function LinRegPage() {
   const statusBadge = (() => {
     switch (pyStatus.state) {
       case 'idle':
-        return <span className="text-slate-400">Python runtime: not started</span>;
+        return <span className="text-muted">Python runtime: not started</span>;
       case 'loading':
         return (
-          <span className="flex items-center gap-2 text-sky-300">
-            <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-sky-700 border-t-sky-300" />
+          <span className="flex items-center gap-2 text-cobalt">
+            <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-cobalt/30 border-t-cobalt" />
             Python runtime: {pyStatus.stage}…
           </span>
         );
       case 'ready':
-        return <span className="text-emerald-400">Python {PYODIDE_VERSION} + numpy ready ({(pyStatus.loadMs / 1000).toFixed(1)} s)</span>;
+        return <span className="text-leaf">Python {PYODIDE_VERSION} + numpy ready ({(pyStatus.loadMs / 1000).toFixed(1)} s)</span>;
       case 'error':
-        return <span className="text-amber-400">Python runtime unavailable: {pyStatus.message}</span>;
+        return <span className="text-mustardInk">Python runtime unavailable: {pyStatus.message}</span>;
     }
   })();
 
@@ -189,7 +189,7 @@ export default function LinRegPage() {
     result && (
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-left text-slate-400">
+          <tr className="text-left text-muted">
             <th className="py-1 font-medium">{label}</th>
             <th className="py-1 text-right font-medium">MSE</th>
             <th className="py-1 text-right font-medium">RMSE</th>
@@ -197,16 +197,16 @@ export default function LinRegPage() {
             <th className="py-1 text-right font-medium">R²</th>
           </tr>
         </thead>
-        <tbody className="mono text-white">
+        <tbody className="mono text-ink">
           {(['train', 'test'] as const).map((s) => {
             const mt = result.metrics[key][s];
             return (
-              <tr key={s} className="border-t border-slate-800">
-                <td className="py-1 font-sans text-slate-300">{s} ({s === 'train' ? split.train.length : split.test.length} pts)</td>
+              <tr key={s} className="border-t border-line">
+                <td className="py-1 font-sans text-ink/80">{s} ({s === 'train' ? split.train.length : split.test.length} pts)</td>
                 <td className="py-1 text-right">{fmt(mt?.mse)}</td>
                 <td className="py-1 text-right">{fmt(mt?.rmse)}</td>
                 <td className="py-1 text-right">{fmt(mt?.mae)}</td>
-                <td className={['py-1 text-right', mt && mt.r2 > 0.9 ? 'text-emerald-400' : ''].join(' ')}>{fmt(mt?.r2)}</td>
+                <td className={['py-1 text-right', mt && mt.r2 > 0.9 ? 'text-leaf' : ''].join(' ')}>{fmt(mt?.r2)}</td>
               </tr>
             );
           })}
@@ -226,19 +226,19 @@ export default function LinRegPage() {
       theory={
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Hypothesis and cost</h3>
+            <h3 className="font-semibold text-ink">Hypothesis and cost</h3>
             <p>For n observations (xᵢ, yᵢ) the model predicts ŷ = m·x + c. The parameters are chosen to minimise the mean squared error:</p>
             <Equation tex={String.raw`h(x) = m\,x + c,\qquad J(m,c) = \frac{1}{2n}\sum_{i=1}^{n}\big(m x_i + c - y_i\big)^2`} />
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Normal equations (closed form)</h3>
+            <h3 className="font-semibold text-ink">Normal equations (closed form)</h3>
             <p>Setting ∂J/∂m = ∂J/∂c = 0 gives two linear equations whose solution is</p>
             <Equation tex={String.raw`m = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2},\qquad c = \bar{y} - m\,\bar{x}`} />
             <p>or, with the design matrix X = [1 x] and θ = [c m]ᵀ, the general form used for any number of features:</p>
             <Equation tex={String.raw`\theta = (X^{T}X)^{-1}X^{T}y`} />
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Gradient descent</h3>
+            <h3 className="font-semibold text-ink">Gradient descent</h3>
             <p>Starting from any (m, c), repeatedly step against the gradient with learning rate α until the cost stops decreasing:</p>
             <Equation tex={String.raw`\frac{\partial J}{\partial m} = \frac{1}{n}\sum (m x_i + c - y_i)\,x_i,\qquad \frac{\partial J}{\partial c} = \frac{1}{n}\sum (m x_i + c - y_i)`} />
             <Equation tex={String.raw`m \leftarrow m - \alpha\,\frac{\partial J}{\partial m},\qquad c \leftarrow c - \alpha\,\frac{\partial J}{\partial c}`} />
@@ -248,7 +248,7 @@ export default function LinRegPage() {
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Evaluating the fit</h3>
+            <h3 className="font-semibold text-ink">Evaluating the fit</h3>
             <Equation tex={String.raw`\mathrm{MSE} = \frac{1}{n}\sum r_i^2,\quad \mathrm{RMSE} = \sqrt{\mathrm{MSE}},\quad \mathrm{MAE} = \frac{1}{n}\sum |r_i|,\quad R^2 = 1 - \frac{\sum r_i^2}{\sum (y_i - \bar{y})^2},\qquad r_i = y_i - \hat{y}_i`} />
             <p>Metrics on the training set measure how well the line fits; on the test set, how well it generalises to new measurements.</p>
           </div>
@@ -259,35 +259,35 @@ export default function LinRegPage() {
           <div className="grid gap-4 lg:grid-cols-[320px_minmax(0,1fr)]">
             <div className="card space-y-4 self-start">
               <div className="space-y-2">
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Dataset</div>
-                <select value={datasetId} onChange={(e) => loadDataset(e.target.value)} className="w-full rounded-md border border-slate-700 bg-slate-900 px-2 py-1.5 text-sm text-slate-100 focus:border-sky-500 focus:outline-none">
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted">Dataset</div>
+                <select value={datasetId} onChange={(e) => loadDataset(e.target.value)} className="w-full rounded-md border border-line bg-field px-2 py-1.5 text-sm text-ink focus:border-cobalt focus:outline-none">
                   {REGRESSION_DATASETS.map((d) => (
                     <option key={d.id} value={d.id}>{d.make(1).name}</option>
                   ))}
                   {datasetId === 'csv' && <option value="csv">{meta.name}</option>}
                 </select>
-                <p className="text-xs text-slate-500">{meta.note}</p>
+                <p className="text-xs text-muted">{meta.note}</p>
                 <div className="flex flex-wrap gap-1.5">
                   <button type="button" className="btn" onClick={() => { setSeed((s) => s + 1); if (datasetId !== 'csv') loadDataset(datasetId, seed + 1); }}>Regenerate (seed {seed + 1})</button>
                   <button type="button" className="btn" onClick={() => fileRef.current?.click()}>Upload CSV</button>
                   <input ref={fileRef} type="file" accept=".csv,text/csv,.txt" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) onCsv(f); e.target.value = ''; }} />
                 </div>
               </div>
-              <div className="space-y-2 border-t border-slate-800 pt-3">
+              <div className="space-y-2 border-t border-line pt-3">
                 <Slider label="Training fraction" value={trainRatio} min={0.5} max={0.9} step={0.05} decimals={2} onChange={setTrainRatio} />
-                <p className="mono text-xs text-slate-500">{split.train.length} train / {split.test.length} test (seeded shuffle)</p>
+                <p className="mono text-xs text-muted">{split.train.length} train / {split.test.length} test (seeded shuffle)</p>
               </div>
-              <div className="space-y-2 border-t border-slate-800 pt-3">
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Gradient descent</div>
+              <div className="space-y-2 border-t border-line pt-3">
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted">Gradient descent</div>
                 <NumberInput label="Epochs" value={epochs} min={1} max={5000} step={50} decimals={0} onChange={(v) => setEpochs(Math.round(v))} />
                 <NumberInput label="Learning rate α" value={lr} min={0.0001} max={2} step={0.01} decimals={4} onChange={setLr} hint="α ≥ 2 diverges on standardised data" />
                 <NumberInput label="Print every N epochs" value={printEvery} min={1} max={5000} step={10} decimals={0} onChange={(v) => setPrintEvery(Math.round(v))} />
               </div>
-              <div className="space-y-2 border-t border-slate-800 pt-3">
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Data table ({rows.length} rows)</div>
-                <div className="max-h-56 overflow-y-auto rounded-md border border-slate-800">
+              <div className="space-y-2 border-t border-line pt-3">
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted">Data table ({rows.length} rows)</div>
+                <div className="max-h-56 overflow-y-auto rounded-md border border-line">
                   <table className="w-full text-xs">
-                    <thead className="sticky top-0 bg-slate-900 text-slate-400">
+                    <thead className="sticky top-0 bg-field text-muted">
                       <tr>
                         <th className="px-2 py-1 text-left font-medium">#</th>
                         <th className="px-2 py-1 text-left font-medium">{meta.xLabel}</th>
@@ -297,11 +297,11 @@ export default function LinRegPage() {
                     </thead>
                     <tbody className="mono">
                       {rows.map((r, i) => (
-                        <tr key={i} className={['border-t border-slate-800', split.test.includes(i) ? 'text-amber-200' : 'text-slate-200'].join(' ')}>
-                          <td className="px-2 py-0.5 text-slate-500">{i + 1}</td>
-                          <td className="px-1 py-0.5"><input type="number" step="any" value={r.x} onChange={(e) => { const v = parseFloat(e.target.value); if (Number.isFinite(v)) setRows((rs) => rs.map((q, k) => (k === i ? { ...q, x: v } : q))); }} className="w-full rounded bg-slate-900 px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-sky-500" /></td>
-                          <td className="px-1 py-0.5"><input type="number" step="any" value={r.y} onChange={(e) => { const v = parseFloat(e.target.value); if (Number.isFinite(v)) setRows((rs) => rs.map((q, k) => (k === i ? { ...q, y: v } : q))); }} className="w-full rounded bg-slate-900 px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-sky-500" /></td>
-                          <td className="px-1 py-0.5"><button type="button" className="text-slate-500 hover:text-red-400" onClick={() => setRows((rs) => rs.filter((_, k) => k !== i))} aria-label={`delete row ${i + 1}`}>×</button></td>
+                        <tr key={i} className={['border-t border-line', split.test.includes(i) ? 'text-mustardInk' : 'text-ink'].join(' ')}>
+                          <td className="px-2 py-0.5 text-muted">{i + 1}</td>
+                          <td className="px-1 py-0.5"><input type="number" step="any" value={r.x} onChange={(e) => { const v = parseFloat(e.target.value); if (Number.isFinite(v)) setRows((rs) => rs.map((q, k) => (k === i ? { ...q, x: v } : q))); }} className="w-full rounded bg-field px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-sky-500" /></td>
+                          <td className="px-1 py-0.5"><input type="number" step="any" value={r.y} onChange={(e) => { const v = parseFloat(e.target.value); if (Number.isFinite(v)) setRows((rs) => rs.map((q, k) => (k === i ? { ...q, y: v } : q))); }} className="w-full rounded bg-field px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-sky-500" /></td>
+                          <td className="px-1 py-0.5"><button type="button" className="text-muted hover:text-tomato" onClick={() => setRows((rs) => rs.filter((_, k) => k !== i))} aria-label={`delete row ${i + 1}`}>×</button></td>
                         </tr>
                       ))}
                     </tbody>
@@ -309,7 +309,7 @@ export default function LinRegPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <button type="button" className="btn" onClick={() => setRows((rs) => [...rs, { x: rs.length ? rs[rs.length - 1].x : 0, y: rs.length ? rs[rs.length - 1].y : 0 }])}>+ Add row</button>
-                  <span className="text-xs text-amber-200/80">amber rows = test set</span>
+                  <span className="text-xs text-mustardInk/80">amber rows = test set</span>
                 </div>
               </div>
             </div>
@@ -327,20 +327,20 @@ export default function LinRegPage() {
                   </div>
                 </div>
                 {engineUsed === 'js' && (
-                  <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-1.5 text-sm text-amber-300">
+                  <div className="rounded-md border border-mustard/60 bg-mustard/15 px-3 py-1.5 text-sm text-mustardInk">
                     {forceJs ? 'Running JS implementation (Python bypassed)' : 'Running JS fallback (offline)'} — same algorithm in TypeScript.
                   </div>
                 )}
-                <div className="overflow-hidden rounded-lg border border-slate-800">
-                  <CodeMirror value={code} height="420px" theme="dark" extensions={[python()]} onChange={setCode} basicSetup={{ lineNumbers: true, foldGutter: true, highlightActiveLine: true }} style={{ fontSize: 13 }} />
+                <div className="overflow-hidden rounded-lg border border-line">
+                  <CodeMirror value={code} height="420px" theme="light" extensions={[python()]} onChange={setCode} basicSetup={{ lineNumbers: true, foldGutter: true, highlightActiveLine: true }} style={{ fontSize: 13 }} />
                 </div>
               </div>
               <div className="card">
-                <div className="mb-1 flex items-center justify-between text-xs text-slate-500">
+                <div className="mb-1 flex items-center justify-between text-xs text-muted">
                   <span>Console output</span>
                   <span className="mono">{runMs !== null && engineUsed ? `${engineUsed === 'python' ? 'Python' : 'JS'} · ${runMs.toFixed(0)} ms` : ''}</span>
                 </div>
-                <pre className="mono max-h-64 min-h-[96px] overflow-auto rounded-md bg-slate-950 p-3 text-xs leading-relaxed text-slate-200">{consoleLines.length ? consoleLines.join('\n') : running ? 'Running…' : 'Press Run to execute the program.'}</pre>
+                <pre className="mono max-h-64 min-h-[96px] overflow-auto rounded-md bg-field p-3 text-xs leading-relaxed text-ink">{consoleLines.length ? consoleLines.join('\n') : running ? 'Running…' : 'Press Run to execute the program.'}</pre>
               </div>
             </div>
           </div>
@@ -356,12 +356,12 @@ export default function LinRegPage() {
                   xLabel={meta.xLabel}
                   yLabel={meta.yLabel}
                   scatter={[
-                    { name: 'train', points: trainPts, color: '#38bdf8' },
-                    { name: 'test', points: testPts, color: '#fbbf24' },
+                    { name: 'train', points: trainPts, color: '#2F5FD0' },
+                    { name: 'test', points: testPts, color: '#F2B33D' },
                   ]}
                   lines={[
-                    { name: `normal eq.  y = ${result.normal.m.toFixed(4)}x + ${result.normal.c.toFixed(3)}`, points: linePts(result.normal.m, result.normal.c), color: '#22c55e' },
-                    { name: `gradient descent  y = ${result.gd.m.toFixed(4)}x + ${result.gd.c.toFixed(3)}`, points: linePts(result.gd.m, result.gd.c), color: '#f97316', dashed: true },
+                    { name: `normal eq.  y = ${result.normal.m.toFixed(4)}x + ${result.normal.c.toFixed(3)}`, points: linePts(result.normal.m, result.normal.c), color: '#3F9B57' },
+                    { name: `gradient descent  y = ${result.gd.m.toFixed(4)}x + ${result.gd.c.toFixed(3)}`, points: linePts(result.gd.m, result.gd.c), color: '#E5533D', dashed: true },
                   ]}
                   height={280}
                 />
@@ -372,8 +372,8 @@ export default function LinRegPage() {
                   xLabel={meta.xLabel}
                   yLabel={`residual (${meta.yLabel.replace(/.*\(|\)/g, '')})`}
                   scatter={[
-                    { name: 'train', points: residuals.filter((r) => !r.test), color: '#38bdf8' },
-                    { name: 'test', points: residuals.filter((r) => r.test), color: '#fbbf24' },
+                    { name: 'train', points: residuals.filter((r) => !r.test), color: '#2F5FD0' },
+                    { name: 'test', points: residuals.filter((r) => r.test), color: '#F2B33D' },
                   ]}
                   yZeroLine
                   height={280}
@@ -382,17 +382,17 @@ export default function LinRegPage() {
             </div>
             <div className="grid gap-4 lg:grid-cols-2">
               <div className="card">
-                <Plot title="Gradient-descent loss (training MSE)" data={lossData} xKey="epoch" xLabel="epoch" yLabel="MSE" series={[{ key: 'loss', label: 'MSE', color: '#f97316' }]} xMarker={frame?.epoch} height={260} decimals={4} />
+                <Plot title="Gradient-descent loss (training MSE)" data={lossData} xKey="epoch" xLabel="epoch" yLabel="MSE" series={[{ key: 'loss', label: 'MSE', color: '#E5533D' }]} xMarker={frame?.epoch} height={260} decimals={4} />
               </div>
               <div className="card space-y-2">
                 <ScatterPlot
                   title={frame ? `Line converging — epoch ${frame.epoch}: m = ${frame.m.toFixed(4)}, c = ${frame.c.toFixed(3)}` : 'Line converging'}
                   xLabel={meta.xLabel}
                   yLabel={meta.yLabel}
-                  scatter={[{ name: 'train', points: trainPts, color: '#38bdf8' }]}
+                  scatter={[{ name: 'train', points: trainPts, color: '#2F5FD0' }]}
                   lines={[
-                    { name: 'target (normal eq.)', points: linePts(result.normal.m, result.normal.c), color: '#22c55e', dashed: true },
-                    ...(frame ? [{ name: 'gradient descent', points: linePts(frame.m, frame.c), color: '#f97316' }] : []),
+                    { name: 'target (normal eq.)', points: linePts(result.normal.m, result.normal.c), color: '#3F9B57', dashed: true },
+                    ...(frame ? [{ name: 'gradient descent', points: linePts(frame.m, frame.c), color: '#E5533D' }] : []),
                   ]}
                   height={220}
                 />
@@ -403,13 +403,13 @@ export default function LinRegPage() {
               <div className="card">{metricsTable('Normal equations', 'normal')}</div>
               <div className="card">{metricsTable('Gradient descent', 'gd')}</div>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-muted">
               Computed by {engineUsed === 'python' ? 'the Python program above (Pyodide + numpy)' : 'the TypeScript implementation'} on {split.train.length} training and {split.test.length} test points.
               |m_GD − m_NE| = {Math.abs(result.gd.m - result.normal.m).toExponential(2)} — increase the epochs or the learning rate if gradient descent has not fully converged.
             </p>
           </div>
         ) : (
-          <p className="text-slate-500">Press Run in the Simulation section to compute the fit; the plots and metrics appear here.</p>
+          <p className="text-muted">Press Run in the Simulation section to compute the fit; the plots and metrics appear here.</p>
         )
       }
       conclusion={

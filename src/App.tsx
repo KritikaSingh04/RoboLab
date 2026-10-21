@@ -21,11 +21,11 @@ class RouteErrorBoundary extends Component<{ children: ReactNode; name: string }
     if (this.state.error) {
       return (
         <div className="mx-auto max-w-3xl px-6 py-16">
-          <h1 className="text-2xl font-bold text-red-400">This experiment hit an error</h1>
-          <pre className="mt-4 overflow-x-auto rounded-lg border border-red-900/50 bg-slate-900 p-4 text-sm text-red-200">{String(this.state.error)}</pre>
-          <p className="mt-4 text-slate-400">
+          <h1 className="text-2xl font-bold text-tomato">This experiment hit an error</h1>
+          <pre className="mt-4 overflow-x-auto rounded-lg border border-tomato/40 bg-field p-4 text-sm text-tomato">{String(this.state.error)}</pre>
+          <p className="mt-4 text-muted">
             The other experiments are unaffected.{' '}
-            <Link to="/" className="text-sky-400 underline">
+            <Link to="/" className="text-cobalt underline">
               Back to the home page
             </Link>
             .
@@ -39,8 +39,8 @@ class RouteErrorBoundary extends Component<{ children: ReactNode; name: string }
 
 function Loading() {
   return (
-    <div className="flex h-64 items-center justify-center text-slate-500">
-      <span className="mr-3 inline-block h-5 w-5 animate-spin rounded-full border-2 border-slate-600 border-t-sky-400" />
+    <div className="flex h-64 items-center justify-center text-muted">
+      <span className="mr-3 inline-block h-5 w-5 animate-spin rounded-full border-2 border-line border-t-cobalt" />
       Loading experiment…
     </div>
   );
@@ -49,9 +49,9 @@ function Loading() {
 function NotFound() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
-      <h1 className="text-2xl font-bold text-white">Page not found</h1>
-      <p className="mt-2 text-slate-400">
-        <Link to="/" className="text-sky-400 underline">
+      <h1 className="text-2xl font-bold text-ink">Page not found</h1>
+      <p className="mt-2 text-muted">
+        <Link to="/" className="text-cobalt underline">
           Back to the home page
         </Link>
       </p>

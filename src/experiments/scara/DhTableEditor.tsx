@@ -34,11 +34,11 @@ export default function DhTableEditor({ base, current, onChange }: Props) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-left text-slate-400">
+          <tr className="text-left text-muted">
             <th className="px-2 py-1.5 font-medium">Link i</th>
             {COLS.map((c) => (
               <th key={c.param} className="px-2 py-1.5 font-medium">
-                {c.label} <span className="font-normal text-slate-500">({c.unit})</span>
+                {c.label} <span className="font-normal text-muted">({c.unit})</span>
               </th>
             ))}
             <th className="px-2 py-1.5 font-medium">Joint</th>
@@ -48,15 +48,15 @@ export default function DhTableEditor({ base, current, onChange }: Props) {
           {current.map((row, i) => {
             const joint = SCARA_JOINT_CELLS.find((c) => c.row === i);
             return (
-              <tr key={i} className="border-t border-slate-800">
-                <td className="mono px-2 py-1 text-slate-300">{i + 1}</td>
+              <tr key={i} className="border-t border-line">
+                <td className="mono px-2 py-1 text-ink/80">{i + 1}</td>
                 {COLS.map((c) => {
                   const variable = isVariable(i, c.param);
                   const display = c.angle ? rad2deg(row[c.param]) : row[c.param];
                   return (
                     <td key={c.param} className="px-2 py-1">
                       {variable ? (
-                        <span className="mono inline-block w-24 rounded-md bg-sky-500/15 px-2 py-0.5 text-right text-sky-200 ring-1 ring-sky-500/30" title={`${variable.label} is a joint variable`}>
+                        <span className="mono inline-block w-24 rounded-md bg-cobalt/10 px-2 py-0.5 text-right text-cobalt ring-1 ring-cobalt/30" title={`${variable.label} is a joint variable`}>
                           {display.toFixed(3)}
                         </span>
                       ) : (
@@ -68,17 +68,17 @@ export default function DhTableEditor({ base, current, onChange }: Props) {
                             const v = parseFloat(e.target.value);
                             if (Number.isFinite(v)) update(i, c.param, v, c.angle);
                           }}
-                          className="mono w-24 rounded-md border border-slate-700 bg-slate-900 px-2 py-0.5 text-right text-slate-100 focus:border-sky-500 focus:outline-none"
+                          className="mono w-24 rounded-md border border-line bg-field px-2 py-0.5 text-right text-ink focus:border-cobalt focus:outline-none"
                           aria-label={`${c.label} of link ${i + 1}`}
                         />
                       )}
                     </td>
                   );
                 })}
-                <td className="px-2 py-1 text-slate-400">
+                <td className="px-2 py-1 text-muted">
                   {joint ? (
                     <>
-                      <span className="text-sky-300">{joint.label}</span> · {joint.kind}
+                      <span className="text-cobalt">{joint.label}</span> · {joint.kind}
                     </>
                   ) : (
                     '—'

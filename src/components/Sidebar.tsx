@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom';
 import { EXPERIMENTS, MODULES, experimentsByModule } from '../experiments/registry';
-import Icon from './Icon';
 
 interface Props {
   open: boolean;
@@ -8,53 +7,37 @@ interface Props {
 }
 
 export default function Sidebar({ open, onClose }: Props) {
-  const linkClass = ({ isActive }: { isActive: boolean }) =>
-    [
-      'group flex items-center gap-3 rounded-lg px-3 py-2 text-[15px] transition',
-      isActive ? 'bg-sky-500/15 text-sky-300 ring-1 ring-sky-500/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white',
-    ].join(' ');
+  const rowClass = ({ isActive }: { isActive: boolean }) =>
+    ['group flex items-center gap-3 rounded-xl px-3 py-2 text-[14px] transition', isActive ? 'bg-[#E4DED2] text-ink' : 'text-ink/80 hover:bg-[#E9E4D9] hover:text-ink'].join(' ');
 
   return (
     <>
-      {/* Mobile backdrop */}
-      {open && <div className="fixed inset-0 z-30 bg-black/60 lg:hidden" onClick={onClose} aria-hidden />}
+      {open && <div className="fixed inset-0 z-30 bg-ink/30 lg:hidden" onClick={onClose} aria-hidden />}
       <aside
-        className={[
-          'fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-slate-800 bg-slate-950/95 backdrop-blur transition-transform lg:static lg:translate-x-0',
-          open ? 'translate-x-0' : '-translate-x-full',
-        ].join(' ')}
+        className={['fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-line bg-sidebar transition-transform lg:static lg:translate-x-0', open ? 'translate-x-0' : '-translate-x-full'].join(' ')}
         aria-label="Experiments"
       >
-        <NavLink to="/" onClick={onClose} className="flex items-center gap-3 border-b border-slate-800 px-5 py-4">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-sky-500 to-indigo-600 text-lg font-bold text-white shadow">
-            R
-          </span>
-          <span>
-            <span className="block text-lg font-semibold leading-tight tracking-tight text-white">RoboLab</span>
-            <span className="block text-xs text-slate-400">Virtual Robotics & AI Lab</span>
-          </span>
-        </NavLink>
-
         <nav className="flex-1 overflow-y-auto px-3 py-4">
-          <NavLink to="/" end onClick={onClose} className={linkClass}>
-            <span className="grid h-7 w-7 place-items-center rounded-md bg-slate-800 text-xs font-semibold text-slate-300 group-[.active]:bg-sky-500/20">
-              ⌂
-            </span>
-            Home
+          <div className="eyebrow px-3 pb-2">Workspace</div>
+          <NavLink to="/" end onClick={onClose} className={rowClass}>
+            <span className="mono w-6 text-[11px] text-muted">—</span>
+            Overview
+          </NavLink>
+          <NavLink to="/about" onClick={onClose} className={rowClass}>
+            <span className="mono w-6 text-[11px] text-muted">—</span>
+            About · syllabus map
           </NavLink>
 
           {MODULES.map((m) => (
             <div key={m.id} className="mt-5">
-              <h3 className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">{m.title}</h3>
+              <div className="eyebrow px-3 pb-2">{m.code}</div>
               <ul className="space-y-0.5">
                 {experimentsByModule(m.id).map((e) => (
                   <li key={e.id}>
-                    <NavLink to={e.route} onClick={onClose} className={linkClass}>
-                      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-slate-800 font-mono text-xs font-semibold text-slate-300">
-                        {e.number}
-                      </span>
+                    <NavLink to={e.route} onClick={onClose} className={rowClass}>
+                      <span className="mono w-6 shrink-0 text-[11px] text-muted">{String(e.number).padStart(2, '0')}</span>
                       <span className="flex-1 truncate">{e.title}</span>
-                      <Icon name={e.icon} className="h-4 w-4 shrink-0 opacity-50 group-hover:opacity-90" />
+                      <span className="mono shrink-0 text-[10px] uppercase tracking-[0.08em] text-muted">{e.co.split(',')[0].trim()}</span>
                     </NavLink>
                   </li>
                 ))}
@@ -62,13 +45,8 @@ export default function Sidebar({ open, onClose }: Props) {
             </div>
           ))}
         </nav>
-
-        <div className="border-t border-slate-800 px-3 py-2">
-          <NavLink to="/about" onClick={onClose} className={linkClass}>
-            <span className="grid h-7 w-7 place-items-center rounded-md bg-slate-800 text-xs font-semibold text-slate-300">i</span>
-            About · syllabus map
-          </NavLink>
-          <div className="px-3 pb-1 pt-2 text-xs text-slate-500">{EXPERIMENTS.length} experiments · runs fully in the browser</div>
+        <div className="eyebrow border-t border-line px-6 py-3">
+          {EXPERIMENTS.length} experiments · {MODULES.length} modules
         </div>
       </aside>
     </>

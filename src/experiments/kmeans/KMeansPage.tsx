@@ -99,7 +99,7 @@ export default function KMeansPage() {
   const controls = (
     <>
       <div className="space-y-2">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Data</div>
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Data</div>
         <div className="grid grid-cols-2 gap-1.5">
           <button type="button" className="btn" onClick={() => loadData(blobs(nBlobs, spread, 60, seed).points)}>Blobs</button>
           <button type="button" className="btn" onClick={() => loadData(moons(240, 0.12, seed).points)}>Moons</button>
@@ -115,14 +115,14 @@ export default function KMeansPage() {
         </div>
       </div>
 
-      <div className="space-y-2 border-t border-slate-800 pt-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Algorithm</div>
+      <div className="space-y-2 border-t border-line pt-3">
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Algorithm</div>
         <Slider label="k (clusters)" value={k} min={1} max={10} step={1} decimals={0} onChange={(v) => { setK(v); resetRun(); }} />
         <div>
           <div className="label mb-1">Distance</div>
-          <div className="grid grid-cols-3 gap-1 rounded-lg bg-slate-800 p-1">
+          <div className="grid grid-cols-3 gap-1 rounded-lg bg-sidebar p-1">
             {METRICS.map((mt) => (
-              <button key={mt} type="button" onClick={() => { setMetric(mt); resetRun(); }} className={['rounded-md px-1 py-1 text-xs font-medium transition', metric === mt ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}>
+              <button key={mt} type="button" onClick={() => { setMetric(mt); resetRun(); }} className={['rounded-md px-1 py-1 text-xs font-medium transition', metric === mt ? 'bg-cobalt text-white' : 'text-ink/80 hover:bg-line'].join(' ')}>
                 {METRIC_LABEL[mt]}
               </button>
             ))}
@@ -130,9 +130,9 @@ export default function KMeansPage() {
         </div>
         <div>
           <div className="label mb-1">Initialisation</div>
-          <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-800 p-1">
+          <div className="grid grid-cols-2 gap-1 rounded-lg bg-sidebar p-1">
             {(['random', 'kmeans++'] as Init[]).map((it) => (
-              <button key={it} type="button" onClick={() => { setInit(it); resetRun(); }} className={['rounded-md px-2 py-1 text-xs font-medium transition', init === it ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}>
+              <button key={it} type="button" onClick={() => { setInit(it); resetRun(); }} className={['rounded-md px-2 py-1 text-xs font-medium transition', init === it ? 'bg-cobalt text-white' : 'text-ink/80 hover:bg-line'].join(' ')}>
                 {it === 'kmeans++' ? 'k-means++' : 'random'}
               </button>
             ))}
@@ -141,8 +141,8 @@ export default function KMeansPage() {
         <Toggle label="Voronoi shading" checked={showVoronoi} onChange={setShowVoronoi} />
       </div>
 
-      <div className="space-y-2 border-t border-slate-800 pt-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Step by step</div>
+      <div className="space-y-2 border-t border-line pt-3">
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Step by step</div>
         <div className="grid grid-cols-2 gap-1.5">
           <button type="button" className="btn" onClick={doInit} disabled={points.length === 0}>1. Initialise</button>
           <button type="button" className="btn" onClick={doAssign} disabled={points.length === 0 || state?.converged}>2. Assign</button>
@@ -152,12 +152,12 @@ export default function KMeansPage() {
         <button type="button" className="btn btn-primary w-full" onClick={doRun} disabled={points.length === 0 || state?.converged}>
           ▶ Run to convergence
         </button>
-        <div className="mono rounded-md bg-slate-900 px-3 py-2 text-sm">
-          <div className="flex justify-between"><span className="text-slate-400">iteration</span><span className="text-white">{state?.iteration ?? 0}</span></div>
-          <div className="flex justify-between"><span className="text-slate-400">phase</span><span className="text-white">{state ? state.phase : 'not started'}</span></div>
-          <div className="flex justify-between"><span className="text-slate-400">WCSS</span><span className="text-white">{state ? fmt(state.wcss) : '—'}</span></div>
-          <div className="flex justify-between"><span className="text-slate-400">max centroid move</span><span className="text-white">{state && state.iteration > 0 ? Math.max(...state.moved).toExponential(2) : '—'}</span></div>
-          <div className="flex justify-between"><span className="text-slate-400">converged</span><span className={state?.converged ? 'text-emerald-400' : 'text-white'}>{state?.converged ? 'yes' : 'no'}</span></div>
+        <div className="mono rounded-md bg-field px-3 py-2 text-sm">
+          <div className="flex justify-between"><span className="text-muted">iteration</span><span className="text-ink">{state?.iteration ?? 0}</span></div>
+          <div className="flex justify-between"><span className="text-muted">phase</span><span className="text-ink">{state ? state.phase : 'not started'}</span></div>
+          <div className="flex justify-between"><span className="text-muted">WCSS</span><span className="text-ink">{state ? fmt(state.wcss) : '—'}</span></div>
+          <div className="flex justify-between"><span className="text-muted">max centroid move</span><span className="text-ink">{state && state.iteration > 0 ? Math.max(...state.moved).toExponential(2) : '—'}</span></div>
+          <div className="flex justify-between"><span className="text-muted">converged</span><span className={state?.converged ? 'text-leaf' : 'text-ink'}>{state?.converged ? 'yes' : 'no'}</span></div>
         </div>
       </div>
     </>
@@ -175,7 +175,7 @@ export default function KMeansPage() {
       theory={
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Objective</h3>
+            <h3 className="font-semibold text-ink">Objective</h3>
             <p>k-means partitions n points into k clusters C₁…C_k with centroids μ_j so as to minimise the within-cluster sum of squares (WCSS):</p>
             <Equation tex={String.raw`J = \sum_{j=1}^{k}\sum_{x_i \in C_j} d(x_i, \mu_j)^2`} />
             <p>
@@ -184,7 +184,7 @@ export default function KMeansPage() {
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Lloyd's algorithm</h3>
+            <h3 className="font-semibold text-ink">Lloyd's algorithm</h3>
             <Equation tex={String.raw`\text{Assign:}\quad c_i \leftarrow \arg\min_j d(x_i, \mu_j)\qquad\qquad \text{Update:}\quad \mu_j \leftarrow \frac{1}{|C_j|}\sum_{x_i \in C_j} x_i`} />
             <p>
               Each step can only decrease J: reassigning a point to a nearer centroid lowers its term, and moving a centroid to the mean lowers the
@@ -193,7 +193,7 @@ export default function KMeansPage() {
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Initialisation: random vs k-means++</h3>
+            <h3 className="font-semibold text-ink">Initialisation: random vs k-means++</h3>
             <p>
               Random initialisation picks k data points. k-means++ picks the first at random and each next centre with probability proportional to
               D(x)², the squared distance to the nearest centre already chosen, spreading the centres out and avoiding poor local minima.
@@ -201,7 +201,7 @@ export default function KMeansPage() {
             <Equation tex={String.raw`P(x) = \frac{D(x)^2}{\sum_{x'} D(x')^2}`} />
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Choosing k and judging quality</h3>
+            <h3 className="font-semibold text-ink">Choosing k and judging quality</h3>
             <p>
               The <em>elbow method</em> plots the converged WCSS against k; the "elbow" where the curve flattens suggests the natural number of
               clusters. The <em>silhouette</em> of a point compares its mean distance a to its own cluster with the mean distance b to the nearest
@@ -210,7 +210,7 @@ export default function KMeansPage() {
             <Equation tex={String.raw`s_i = \frac{b_i - a_i}{\max(a_i, b_i)},\qquad S = \frac{1}{n}\sum_i s_i`} />
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Fuzzy c-means</h3>
+            <h3 className="font-semibold text-ink">Fuzzy c-means</h3>
             <p>Instead of a hard label each point gets memberships u_ij ∈ [0, 1] summing to 1; the fuzziness m &gt; 1 controls how soft they are:</p>
             <Equation tex={String.raw`J_m = \sum_i\sum_j u_{ij}^m\, d(x_i,\mu_j)^2,\qquad u_{ij} = \frac{1}{\sum_l \left(d_{ij}/d_{il}\right)^{2/(m-1)}},\qquad \mu_j = \frac{\sum_i u_{ij}^m x_i}{\sum_i u_{ij}^m}`} />
           </div>
@@ -219,7 +219,7 @@ export default function KMeansPage() {
       simulation={
         <SimulationLayout controls={controls}>
           <div className="space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
               <span>
                 {state && state.phase !== 'init' ? (
                   <>
@@ -235,7 +235,7 @@ export default function KMeansPage() {
             </div>
             <KMeansCanvas points={points} state={state} metric={metric} showVoronoi={showVoronoi} scene={scene} onAddPoint={addPoint} />
             {state && state.phase === 'updated' && (
-              <p className="text-xs text-slate-500">Dashed lines show how far each centroid moved in iteration {state.iteration} (from the hollow dot to the X).</p>
+              <p className="text-xs text-muted">Dashed lines show how far each centroid moved in iteration {state.iteration} (from the hollow dot to the X).</p>
             )}
           </div>
         </SimulationLayout>
@@ -245,34 +245,34 @@ export default function KMeansPage() {
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="card">
               {history.length > 1 ? (
-                <Plot title="WCSS per iteration" data={history} xKey="iteration" xLabel="iteration" yLabel="WCSS" series={[{ key: 'wcss', label: 'WCSS', color: '#38bdf8' }]} height={240} decimals={3} xTicks={history.map((h) => h.iteration)} />
+                <Plot title="WCSS per iteration" data={history} xKey="iteration" xLabel="iteration" yLabel="WCSS" series={[{ key: 'wcss', label: 'WCSS', color: '#2F5FD0' }]} height={240} decimals={3} xTicks={history.map((h) => h.iteration)} />
               ) : (
-                <div className="flex h-60 flex-col items-center justify-center text-sm text-slate-500">
-                  <div className="font-medium text-slate-300">WCSS per iteration</div>
+                <div className="flex h-60 flex-col items-center justify-center text-sm text-muted">
+                  <div className="font-medium text-ink/80">WCSS per iteration</div>
                   Run at least one iteration to see the objective decrease.
                 </div>
               )}
             </div>
             <div className="card">
               <div className="mb-2 flex items-center justify-between">
-                <div className="text-sm font-medium text-slate-300">Elbow plot: converged WCSS vs k (k = 1…10, best of 4 restarts)</div>
+                <div className="text-sm font-medium text-ink/80">Elbow plot: converged WCSS vs k (k = 1…10, best of 4 restarts)</div>
                 <button type="button" className="btn" onClick={computeElbow} disabled={points.length === 0}>Compute</button>
               </div>
               {elbowData ? (
-                <Plot data={elbowData} xKey="k" xLabel="k" yLabel="WCSS" series={[{ key: 'wcss', label: 'WCSS', color: '#f97316' }]} xMarker={k} height={210} decimals={2} xTicks={elbowData.map((e) => e.k)} />
+                <Plot data={elbowData} xKey="k" xLabel="k" yLabel="WCSS" series={[{ key: 'wcss', label: 'WCSS', color: '#E5533D' }]} xMarker={k} height={210} decimals={2} xTicks={elbowData.map((e) => e.k)} />
               ) : (
-                <div className="flex h-52 items-center justify-center text-sm text-slate-500">Press Compute to run k-means for every k.</div>
+                <div className="flex h-52 items-center justify-center text-sm text-muted">Press Compute to run k-means for every k.</div>
               )}
             </div>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
             <div className="card">
-              <h3 className="mb-2 font-semibold text-white">Cluster sizes</h3>
+              <h3 className="mb-2 font-semibold text-ink">Cluster sizes</h3>
               {summary.length ? (
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left text-slate-400">
+                    <tr className="text-left text-muted">
                       <th className="py-1 font-medium">Cluster</th>
                       <th className="py-1 text-right font-medium">Size</th>
                       <th className="py-1 text-right font-medium">Centroid x</th>
@@ -283,7 +283,7 @@ export default function KMeansPage() {
                   </thead>
                   <tbody className="mono">
                     {summary.map((c) => (
-                      <tr key={c.cluster} className="border-t border-slate-800 text-white">
+                      <tr key={c.cluster} className="border-t border-line text-ink">
                         <td className="py-1 font-sans"><span className="mr-2 inline-block h-2.5 w-2.5 rounded-sm" style={{ background: CLUSTER_COLORS[c.cluster % CLUSTER_COLORS.length] }} />C{c.cluster + 1}</td>
                         <td className="py-1 text-right">{c.size}</td>
                         <td className="py-1 text-right">{fmt(c.centroid[0])}</td>
@@ -295,23 +295,23 @@ export default function KMeansPage() {
                   </tbody>
                 </table>
               ) : (
-                <p className="text-sm text-slate-500">Assign points to see the cluster sizes.</p>
+                <p className="text-sm text-muted">Assign points to see the cluster sizes.</p>
               )}
             </div>
             <div className="card">
-              <h3 className="mb-2 font-semibold text-white">Silhouette score</h3>
+              <h3 className="mb-2 font-semibold text-ink">Silhouette score</h3>
               {sil !== null ? (
                 <>
-                  <div className="mono text-3xl font-semibold text-white">{sil.toFixed(3)}</div>
-                  <div className="mt-2 h-2 w-full rounded-full bg-slate-800">
-                    <div className="h-2 rounded-full bg-emerald-500" style={{ width: `${Math.max(0, Math.min(1, (sil + 1) / 2)) * 100}%` }} />
+                  <div className="mono text-3xl font-semibold text-ink">{sil.toFixed(3)}</div>
+                  <div className="mt-2 h-2 w-full rounded-full bg-sidebar">
+                    <div className="h-2 rounded-full bg-leaf" style={{ width: `${Math.max(0, Math.min(1, (sil + 1) / 2)) * 100}%` }} />
                   </div>
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-muted">
                     {sil > 0.7 ? 'Strong structure: clusters are compact and well separated.' : sil > 0.5 ? 'Reasonable structure.' : sil > 0.25 ? 'Weak structure: clusters overlap.' : 'No substantial structure found for this k.'}
                   </p>
                 </>
               ) : (
-                <p className="text-sm text-slate-500">Assign points (with k ≥ 2) to compute the silhouette.</p>
+                <p className="text-sm text-muted">Assign points (with k ≥ 2) to compute the silhouette.</p>
               )}
             </div>
           </div>
@@ -319,8 +319,8 @@ export default function KMeansPage() {
           <div className="card space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <h3 className="font-semibold text-white">Bonus: fuzzy c-means (syllabus 4.3)</h3>
-                <p className="text-xs text-slate-500">Same data and c = k. Each point is shaded by mixing the cluster colours with its memberships.</p>
+                <h3 className="font-semibold text-ink">Bonus: fuzzy c-means (syllabus 4.3)</h3>
+                <p className="text-xs text-muted">Same data and c = k. Each point is shaded by mixing the cluster colours with its memberships.</p>
               </div>
               <Toggle label="Run fuzzy c-means" checked={showFcm} onChange={setShowFcm} />
             </div>
@@ -329,12 +329,12 @@ export default function KMeansPage() {
                 <KMeansCanvas points={points} state={null} metric={metric} showVoronoi={false} membership={fcm.membership} fcmCentroids={fcm.centroids} scene={scene} />
                 <div className="space-y-3">
                   <Slider label="Fuzziness m" value={m} min={1.1} max={4} step={0.1} decimals={1} onChange={setM} />
-                  <div className="mono rounded-md bg-slate-900 px-3 py-2 text-sm">
-                    <div className="flex justify-between"><span className="text-slate-400">iterations</span><span className="text-white">{fcm.iterations}</span></div>
-                    <div className="flex justify-between"><span className="text-slate-400">objective J_m</span><span className="text-white">{fmt(fcm.objective)}</span></div>
-                    <div className="flex justify-between"><span className="text-slate-400">mean max membership</span><span className="text-white">{fmt(fcm.membership.reduce((a, r) => a + Math.max(...r), 0) / fcm.membership.length)}</span></div>
+                  <div className="mono rounded-md bg-field px-3 py-2 text-sm">
+                    <div className="flex justify-between"><span className="text-muted">iterations</span><span className="text-ink">{fcm.iterations}</span></div>
+                    <div className="flex justify-between"><span className="text-muted">objective J_m</span><span className="text-ink">{fmt(fcm.objective)}</span></div>
+                    <div className="flex justify-between"><span className="text-muted">mean max membership</span><span className="text-ink">{fmt(fcm.membership.reduce((a, r) => a + Math.max(...r), 0) / fcm.membership.length)}</span></div>
                   </div>
-                  <p className="text-xs text-slate-500">m → 1 gives crisp (k-means-like) memberships; larger m blends the colours of points between clusters.</p>
+                  <p className="text-xs text-muted">m → 1 gives crisp (k-means-like) memberships; larger m blends the colours of points between clusters.</p>
                 </div>
               </div>
             )}

@@ -3,8 +3,38 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   font-size: 16px;
+  /* Design-system palette — mirrored in tailwind.config.js and src/theme.ts */
+  --paper: #f4f1ea;
+  --sidebar: #efebe3;
+  --card: #ffffff;
+  --line: #e6e1d6;
+  --ink: #1c1b19;
+  --muted: #8a857a;
+  --field: #fbfaf7;
+  --grid: #e8e4da;
+  --cobalt: #2f5fd0;
+  --tomato: #e5533d;
+  --mustard: #f2b33d;
+  --mustard-ink: #a8740f;
+  --leaf: #3f9b57;
+  --teal: #1f8a8a;
+  /* RGB channels of the same colours, so Tailwind opacity modifiers (bg-cobalt/10) work */
+  --paper-rgb: 244 241 234;
+  --sidebar-rgb: 239 235 227;
+  --card-rgb: 255 255 255;
+  --line-rgb: 230 225 214;
+  --ink-rgb: 28 27 25;
+  --muted-rgb: 138 133 122;
+  --field-rgb: 251 250 247;
+  --grid-rgb: 232 228 218;
+  --cobalt-rgb: 47 95 208;
+  --tomato-rgb: 229 83 61;
+  --mustard-rgb: 242 179 61;
+  --mustard-ink-rgb: 168 116 15;
+  --leaf-rgb: 63 155 87;
+  --teal-rgb: 31 138 138;
 }
 
 html,
@@ -14,38 +44,49 @@ body,
 }
 
 body {
-  @apply bg-slate-950 text-slate-100 antialiased;
+  @apply bg-paper font-sans text-ink antialiased;
   font-feature-settings: 'cv11', 'ss01', 'tnum';
 }
 
-/* Scrollbars that fit the dark theme */
+h1,
+h2,
+h3 {
+  font-family: 'Inter Tight', Inter, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: #334155 transparent;
+  scrollbar-color: #d9d3c6 transparent;
 }
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #d9d3c6;
   border-radius: 4px;
 }
 
 /* Range input styling */
 input[type='range'] {
-  @apply h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-700;
+  @apply h-1.5 w-full cursor-pointer appearance-none rounded-full bg-line;
 }
 input[type='range']::-webkit-slider-thumb {
-  @apply h-4 w-4 appearance-none rounded-full bg-sky-400 shadow;
-  border: 2px solid #0f172a;
+  @apply h-4 w-4 appearance-none rounded-full bg-cobalt;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(28, 27, 25, 0.25);
 }
 input[type='range']::-moz-range-thumb {
-  @apply h-4 w-4 rounded-full bg-sky-400 shadow;
-  border: 2px solid #0f172a;
+  @apply h-4 w-4 rounded-full bg-cobalt;
+  border: 2px solid #ffffff;
 }
 input[type='range']:focus-visible {
-  @apply outline-none ring-2 ring-sky-500/60;
+  @apply outline-none ring-2 ring-cobalt/40;
+}
+input[type='checkbox'] {
+  accent-color: var(--cobalt);
 }
 
 /* KaTeX sizing */
@@ -58,18 +99,22 @@ input[type='range']:focus-visible {
 
 @layer components {
   .card {
-    @apply rounded-xl border border-slate-800 bg-slate-900/70 p-4 shadow-sm;
+    @apply rounded-card border border-line bg-card p-4 shadow-card;
   }
   .btn {
-    @apply inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-100 transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/60 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-1.5 text-sm font-medium text-ink transition hover:bg-sidebar focus:outline-none focus-visible:ring-2 focus-visible:ring-cobalt/40 disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
-    @apply border-sky-500/50 bg-sky-600 hover:bg-sky-500;
+    @apply border-ink bg-ink text-white hover:bg-ink/85;
   }
   .label {
-    @apply text-sm font-medium text-slate-300;
+    @apply text-sm font-medium text-ink;
   }
   .mono {
     @apply font-mono tabular-nums;
+  }
+  .eyebrow {
+    @apply font-mono text-[11px] font-medium uppercase text-muted;
+    letter-spacing: 0.08em;
   }
 }

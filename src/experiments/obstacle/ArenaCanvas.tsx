@@ -3,7 +3,11 @@ import Canvas2D, { type CanvasPointer, type Transform } from '../../components/C
 import type { MapDef } from '../../lib/sim/maps';
 import type { SimState } from '../../lib/sim/run';
 import { pointInObstacle, type Obstacle, type Vec2 } from '../../lib/sim/geometry';
-import { potentialForce, CONTROLLERS, type ControllerId } from '../../lib/sim/controllers';
+import { potentialForce, type ControllerId } from '../../lib/sim/controllers';
+import { theme } from '../../theme';
+
+/** Controller colours (the controller definitions in lib carry ids and names only as far as the UI is concerned). */
+export const CONTROLLER_COLORS: Record<ControllerId, string> = { reactive: theme.cobalt, fuzzy: theme.tomato, apf: theme.teal };
 import type { RunResult } from '../../lib/sim/run';
 import { GOAL_RADIUS } from '../../lib/sim/run';
 import { DEFAULT_ROBOT } from '../../lib/sim/diffDrive';
@@ -23,7 +27,7 @@ interface Props {
 export default function ArenaCanvas({ map, sim, controllerId, showField, overlays, editMode, onMapChange }: Props) {
   const drag = useRef<null | { kind: 'goal' } | { kind: 'start' } | { kind: 'shape'; from: Vec2; to: Vec2 }>(null);
   const preview = useRef<Obstacle | null>(null);
-  const color = CONTROLLERS.find((c) => c.id === controllerId)?.color ?? '#38bdf8';
+  const color = CONTROLLER_COLORS[controllerId];
 
   const draw = useCallback(
     (ctx: CanvasRenderingContext2D, t: Transform) => {
@@ -31,16 +35,16 @@ export default function ArenaCanvas({ map, sim, controllerId, showField, overlay
       // arena floor + walls
       const [ax, ay] = t.toPixel(0, map.arena.h);
       const [bx, by] = t.toPixel(map.arena.w, 0);
-      ctx.fillStyle = '#0b1220';
+      ctx.fillStyle = '#F4F1EA';
       ctx.fillRect(ax, ay, bx - ax, by - ay);
-      ctx.strokeStyle = '#64748b';
+      ctx.strokeStyle = '#8A857A';
       ctx.lineWidth = 4;
       ctx.strokeRect(ax, ay, bx - ax, by - ay);
       // potential field arrows
       if (showField) {
         ctx.save();
-        ctx.strokeStyle = 'rgba(168, 85, 247, 0.7)';
-        ctx.fillStyle = 'rgba(168, 85, 247, 0.7)';
+        ctx.strokeStyle = 'rgba(31, 138, 138, 0.7)';
+        ctx.fillStyle = 'rgba(31, 138, 138, 0.7)';
         ctx.lineWidth = 1.2;
         const n = 18;
         for (let i = 0; i < n; i++) {
@@ -84,12 +88,12 @@ export default function ArenaCanvas({ map, sim, controllerId, showField, overlay
         ctx.fill();
         ctx.stroke();
       };
-      for (const o of map.obstacles) drawOb(o, '#334155', '#94a3b8');
-      if (preview.current) drawOb(preview.current, 'rgba(56,189,248,0.25)', '#38bdf8');
+      for (const o of map.obstacles) drawOb(o, '#CFC8B8', '#6B665C');
+      if (preview.current) drawOb(preview.current, 'rgba(47,95,208,0.25)', '#2F5FD0');
       // comparison overlays
       if (overlays) {
         for (const run of overlays) {
-          const c = CONTROLLERS.find((k) => k.id === run.controller)?.color ?? '#fff';
+          const c = CONTROLLER_COLORS[run.controller];
           ctx.strokeStyle = c;
           ctx.globalAlpha = 0.85;
           ctx.lineWidth = 2.5;
@@ -124,12 +128,12 @@ export default function ArenaCanvas({ map, sim, controllerId, showField, overlay
       ctx.stroke();
       // goal
       const [gx, gy] = t.toPixel(map.goal[0], map.goal[1]);
-      ctx.strokeStyle = '#22c55e';
+      ctx.strokeStyle = '#3F9B57';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.arc(gx, gy, GOAL_RADIUS * t.scale, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.fillStyle = '#22c55e';
+      ctx.fillStyle = '#3F9B57';
       ctx.beginPath();
       ctx.arc(gx, gy, 4, 0, Math.PI * 2);
       ctx.fill();
@@ -140,7 +144,7 @@ export default function ArenaCanvas({ map, sim, controllerId, showField, overlay
       ctx.save();
       ctx.translate(sx, sy);
       ctx.rotate(-map.start.theta);
-      ctx.fillStyle = 'rgba(148,163,184,0.5)';
+      ctx.fillStyle = 'rgba(138,133,122,0.5)';
       ctx.beginPath();
       ctx.moveTo(12, 0);
       ctx.lineTo(-8, 8);
@@ -148,7 +152,7 @@ export default function ArenaCanvas({ map, sim, controllerId, showField, overlay
       ctx.closePath();
       ctx.fill();
       ctx.restore();
-      ctx.fillStyle = '#94a3b8';
+      ctx.fillStyle = '#6B665C';
       ctx.font = '11px ui-sans-serif, system-ui';
       ctx.fillText('start', sx + 12, sy + 14);
       // sensor rays
@@ -156,14 +160,14 @@ export default function ArenaCanvas({ map, sim, controllerId, showField, overlay
         const [ox, oy] = t.toPixel(s.origin[0], s.origin[1]);
         const end: Vec2 = s.hit ?? [s.origin[0] + s.range * s.dir[0], s.origin[1] + s.range * s.dir[1]];
         const [ex, ey] = t.toPixel(end[0], end[1]);
-        ctx.strokeStyle = s.hit ? 'rgba(234,179,8,0.8)' : 'rgba(234,179,8,0.25)';
+        ctx.strokeStyle = s.hit ? 'rgba(242,179,61,0.8)' : 'rgba(242,179,61,0.25)';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(ox, oy);
         ctx.lineTo(ex, ey);
         ctx.stroke();
         if (s.hit) {
-          ctx.fillStyle = '#ef4444';
+          ctx.fillStyle = '#E5533D';
           ctx.beginPath();
           ctx.arc(ex, ey, 3.5, 0, Math.PI * 2);
           ctx.fill();
@@ -171,8 +175,8 @@ export default function ArenaCanvas({ map, sim, controllerId, showField, overlay
       }
       // robot
       const [rx, ry] = t.toPixel(sim.pose.x, sim.pose.y);
-      ctx.fillStyle = sim.colliding ? '#ef4444' : color;
-      ctx.strokeStyle = '#0f172a';
+      ctx.fillStyle = sim.colliding ? '#E5533D' : color;
+      ctx.strokeStyle = '#1C1B19';
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(rx, ry, r * t.scale, 0, Math.PI * 2);
@@ -182,18 +186,18 @@ export default function ArenaCanvas({ map, sim, controllerId, showField, overlay
       ctx.save();
       ctx.translate(rx, ry);
       ctx.rotate(-sim.pose.theta);
-      ctx.fillStyle = '#0f172a';
+      ctx.fillStyle = '#1C1B19';
       const L = DEFAULT_ROBOT.wheelBase * t.scale;
       ctx.fillRect(-0.08 * t.scale, -L / 2 - 2, 0.16 * t.scale, 4);
       ctx.fillRect(-0.08 * t.scale, L / 2 - 2, 0.16 * t.scale, 4);
-      ctx.strokeStyle = '#f8fafc';
+      ctx.strokeStyle = '#1C1B19';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.lineTo(r * t.scale, 0);
       ctx.stroke();
       ctx.restore();
-      ctx.fillStyle = '#64748b';
+      ctx.fillStyle = '#8A857A';
       ctx.font = '12px ui-sans-serif, system-ui';
       const hint = { select: 'drag the goal or the start marker', rect: 'drag to draw a rectangle', circle: 'drag to draw a circle', erase: 'click an obstacle to delete it' }[editMode];
       ctx.fillText(`${hint} · yellow rays = ultrasonic sensors, red = echoes`, 10, t.height - 10);

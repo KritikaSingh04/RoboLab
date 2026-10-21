@@ -19,10 +19,10 @@ export default class SceneBoundary extends Component<Props, { error: Error | nul
     if (this.state.error) {
       return (
         this.props.fallback ?? (
-          <div className="flex h-full min-h-[200px] flex-col items-center justify-center gap-2 p-6 text-center text-slate-400">
-            <div className="font-medium text-amber-400">3D view unavailable</div>
+          <div className="flex h-full min-h-[200px] flex-col items-center justify-center gap-2 p-6 text-center text-muted">
+            <div className="font-medium text-mustardInk">3D view unavailable</div>
             <div className="text-sm">{String(this.state.error.message || this.state.error)}</div>
-            <div className="text-xs text-slate-500">WebGL could not be started in this browser. All numeric results on this page are unaffected.</div>
+            <div className="text-xs text-muted">WebGL could not be started in this browser. All numeric results on this page are unaffected.</div>
           </div>
         )
       );

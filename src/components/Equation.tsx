@@ -22,5 +22,5 @@ export default function Equation({ tex, inline = false, className = '' }: Props)
     [tex, inline],
   );
   const Tag = inline ? 'span' : 'div';
-  return <Tag className={[inline ? '' : 'text-slate-100', className].join(' ')} dangerouslySetInnerHTML={{ __html: html }} />;
+  return <Tag className={[inline ? '' : 'text-ink', className].join(' ')} dangerouslySetInnerHTML={{ __html: html }} />;
 }

@@ -12,14 +12,16 @@ export interface ModuleInfo {
   id: ModuleId;
   title: string;
   blurb: string;
+  /** Sidebar group label, e.g. "MODULE 2 · KINEMATICS". */
+  code: string;
 }
 
 export const MODULES: ModuleInfo[] = [
-  { id: 'kinematics', title: 'Kinematics & Dynamics', blurb: 'Transforms, forward/inverse kinematics, trajectories and the dynamics of robot arms.' },
-  { id: 'ai', title: 'Artificial Intelligence', blurb: 'Fuzzy inference and neural networks built from scratch.' },
-  { id: 'ml', title: 'Machine Learning', blurb: 'Regression and clustering, with every number visible.' },
-  { id: 'mobile', title: 'Mobile Robotics', blurb: 'Differential-drive robots with sensors and reactive controllers.' },
-  { id: 'integration', title: 'Integrated Pipeline', blurb: 'Several experiments chained into one pick-and-place task.' },
+  { id: 'kinematics', title: 'Kinematics & Dynamics', blurb: 'Transforms, forward/inverse kinematics, trajectories and the dynamics of robot arms.', code: 'Module 2 · Kinematics' },
+  { id: 'ai', title: 'Artificial Intelligence', blurb: 'Fuzzy inference and neural networks built from scratch.', code: 'Module 3 · AI' },
+  { id: 'ml', title: 'Machine Learning', blurb: 'Regression and clustering, with every number visible.', code: 'Module 4 · Machine learning' },
+  { id: 'mobile', title: 'Mobile Robotics', blurb: 'Differential-drive robots with sensors and reactive controllers.', code: 'Module 5 · Mobile robotics' },
+  { id: 'integration', title: 'Integrated Pipeline', blurb: 'Several experiments chained into one pick-and-place task.', code: 'Integration' },
 ];
 
 export interface Experiment {

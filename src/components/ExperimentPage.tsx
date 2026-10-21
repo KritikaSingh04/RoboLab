@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { Experiment } from '../experiments/registry';
-import Icon from './Icon';
+import Illustration from './Illustration';
 
 /**
  * Standard lab write-up template. Every experiment renders inside this so the
  * structure (Aim → Theory → Simulation → Results → Conclusion) is identical.
- * A sticky section nav highlights the section currently in view.
+ * A sticky section nav (mono tabs, underline on the active one) tracks scrolling.
  */
 export interface ExperimentPageProps {
   experiment: Experiment;
@@ -48,7 +48,6 @@ export default function ExperimentPage({ experiment, aim, theory, simulation, re
         const el = refs.current[s.id];
         if (el && el.getBoundingClientRect().top - rootTop <= 140) current = s.id;
       }
-      // At the very bottom, the last section is the one being read.
       if (root.scrollTop + root.clientHeight >= root.scrollHeight - 2) current = SECTIONS[SECTIONS.length - 1].id;
       setActive((a) => (a === current ? a : current));
     };
@@ -61,39 +60,35 @@ export default function ExperimentPage({ experiment, aim, theory, simulation, re
     };
   }, []);
 
-  const jump = (id: SectionId) => {
-    refs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
+  const jump = (id: SectionId) => refs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const content: Record<SectionId, ReactNode> = { aim, theory, simulation, results, conclusion };
+  const code = `${String(experiment.number).padStart(2, '0')}`;
 
   return (
-    <article className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-      <header className="pt-8 pb-4">
-        <div className="flex flex-wrap items-center gap-3 text-sm">
-          <span className="rounded-md bg-slate-800 px-2 py-0.5 font-mono text-slate-300">Experiment {experiment.number}</span>
-          <span className="rounded-md bg-sky-500/15 px-2 py-0.5 font-medium text-sky-300 ring-1 ring-sky-500/30">{experiment.tag}</span>
-          <span className="text-slate-500">Syllabus {experiment.syllabus}</span>
+    <article className="mx-auto max-w-[1400px] px-6 pb-16 lg:px-10">
+      <header className="grid items-center gap-6 pb-4 pt-8 lg:grid-cols-[minmax(0,1fr)_220px]">
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="mono text-[13px] text-muted">EXPERIMENT {code}</span>
+            <span className="eyebrow rounded-md bg-white px-2 py-0.5 ring-1 ring-line">{experiment.tag}</span>
+            <span className="mono text-[12px] text-muted">§ {experiment.syllabus}</span>
+          </div>
+          <h1 className="mt-3 text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05] text-ink">{experiment.title}</h1>
+          <p className="mt-3 max-w-2xl text-[15px] text-muted">{experiment.description}</p>
         </div>
-        <h1 className="mt-3 flex items-center gap-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          <Icon name={experiment.icon} className="h-8 w-8 text-sky-400" />
-          {experiment.title}
-        </h1>
+        <Illustration id={experiment.id} className="mx-auto h-36 w-full max-w-[220px] lg:h-40" alt="" />
       </header>
 
-      <nav className="sticky top-0 z-20 -mx-4 mb-6 border-b border-slate-800 bg-slate-950/90 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8" aria-label="Sections">
-        <ul className="flex gap-1 overflow-x-auto">
+      <nav className="sticky top-0 z-20 -mx-6 mb-6 border-b border-line bg-paper/95 px-6 backdrop-blur lg:-mx-10 lg:px-10" aria-label="Sections">
+        <ul className="flex gap-6 overflow-x-auto">
           {SECTIONS.map((s, i) => (
             <li key={s.id}>
               <button
                 type="button"
                 onClick={() => jump(s.id)}
-                className={[
-                  'whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition',
-                  active === s.id ? 'bg-sky-500/15 text-sky-300' : 'text-slate-400 hover:bg-slate-800 hover:text-white',
-                ].join(' ')}
+                className={['eyebrow -mb-px whitespace-nowrap border-b-2 py-3 transition', active === s.id ? 'border-ink text-ink' : 'border-transparent hover:text-ink'].join(' ')}
               >
-                <span className="mr-1.5 font-mono text-xs opacity-60">{i + 1}</span>
+                <span className="mr-1.5 opacity-60">{i + 1}</span>
                 {s.label}
               </button>
             </li>
@@ -109,13 +104,10 @@ export default function ExperimentPage({ experiment, aim, theory, simulation, re
             ref={(el) => {
               refs.current[s.id] = el;
             }}
-            className="scroll-mt-20"
+            className="scroll-mt-16"
           >
-            <h2 className="mb-3 flex items-center gap-2 text-xl font-semibold text-white">
-              <span className="h-5 w-1 rounded-full bg-sky-500" aria-hidden />
-              {s.label}
-            </h2>
-            <div className="text-[15px] leading-relaxed text-slate-300">{content[s.id]}</div>
+            <h2 className="mb-3 text-[22px] text-ink">{s.label}</h2>
+            <div className={['text-[15px] leading-relaxed text-ink/90', s.id === 'aim' || s.id === 'theory' || s.id === 'conclusion' ? 'card p-6' : ''].join(' ')}>{content[s.id]}</div>
           </section>
         ))}
       </div>
@@ -133,13 +125,13 @@ export function SimulationLayout({ controls, children }: { controls: ReactNode; 
   );
 }
 
-/** Placeholder shown by every experiment until it is implemented. */
+/** Placeholder shown by an experiment until it is implemented. */
 export function ComingSoon({ what }: { what?: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-dashed border-slate-700 bg-slate-900/40 px-4 py-6 text-slate-400">
-      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-800 font-mono text-sm">…</span>
+    <div className="flex items-center gap-3 rounded-lg border border-dashed border-line bg-white px-4 py-6 text-muted">
+      <span className="mono grid h-8 w-8 shrink-0 place-items-center rounded-full bg-sidebar text-sm">…</span>
       <div>
-        <div className="font-medium text-slate-300">Coming soon</div>
+        <div className="font-medium text-ink">Coming soon</div>
         {what && <div className="text-sm">{what}</div>}
       </div>
     </div>

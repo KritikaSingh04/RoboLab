@@ -29,28 +29,28 @@ export default function NeuralPage() {
       theory={
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">The perceptron</h3>
+            <h3 className="font-semibold text-ink">The perceptron</h3>
             <p>A single neuron computes a weighted sum and applies a step. The perceptron rule moves the weights toward misclassified samples:</p>
             <Equation tex={String.raw`\hat{y} = \mathrm{step}\!\left(\sum_i w_i x_i + b\right),\qquad w_i \leftarrow w_i + \eta\,(y - \hat{y})\,x_i,\quad b \leftarrow b + \eta\,(y - \hat{y})`} />
             <p>It converges only for linearly separable problems (AND, OR, NAND). XOR needs a hidden layer.</p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Multilayer perceptron: forward pass</h3>
+            <h3 className="font-semibold text-ink">Multilayer perceptron: forward pass</h3>
             <Equation tex={String.raw`z^{(l)} = W^{(l)} a^{(l-1)} + b^{(l)},\qquad a^{(l)} = f\!\left(z^{(l)}\right),\qquad a^{(0)} = x`} />
             <p>Activations: sigmoid 1/(1+e⁻ᶻ), tanh, ReLU max(0, z) or linear. For classification the output layer uses softmax, for regression it is linear.</p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Loss functions</h3>
+            <h3 className="font-semibold text-ink">Loss functions</h3>
             <Equation tex={String.raw`J_{\text{MSE}} = \tfrac{1}{2}\sum_k (\hat{y}_k - y_k)^2,\qquad J_{\text{CE}} = -\sum_k y_k \log p_k,\quad p = \mathrm{softmax}(z^{(L)})`} />
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Back-propagation</h3>
+            <h3 className="font-semibold text-ink">Back-propagation</h3>
             <p>The error signal δ at the output is propagated backwards through the transposed weights, and every weight's gradient is the product of the error at its destination and the activation at its source:</p>
             <Equation tex={String.raw`\delta^{(L)} = (p - y)\ \text{(softmax+CE)}\quad\text{or}\quad(\hat{y} - y)\odot f'(z^{(L)})\ \text{(MSE)},\qquad \delta^{(l)} = \left(W^{(l+1)T}\delta^{(l+1)}\right)\odot f'(z^{(l)})`} />
             <Equation tex={String.raw`\frac{\partial J}{\partial W^{(l)}} = \delta^{(l)}\,a^{(l-1)T},\qquad \frac{\partial J}{\partial b^{(l)}} = \delta^{(l)}`} />
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Mini-batch gradient descent with momentum</h3>
+            <h3 className="font-semibold text-ink">Mini-batch gradient descent with momentum</h3>
             <Equation tex={String.raw`v \leftarrow \beta v - \eta\,\frac{1}{|B|}\sum_{i \in B}\nabla J_i,\qquad \theta \leftarrow \theta + v`} />
             <p>
               Weights are initialised with Xavier (Var = 2/(n_in + n_out)) for sigmoid/tanh or He (Var = 2/n_in) for ReLU so signals neither vanish
@@ -61,9 +61,9 @@ export default function NeuralPage() {
       }
       simulation={
         <div className="space-y-4">
-          <div className="flex gap-1 rounded-lg bg-slate-800 p-1">
+          <div className="flex gap-1 rounded-lg bg-sidebar p-1">
             {TABS.map((t) => (
-              <button key={t.id} type="button" onClick={() => setTab(t.id)} className={['flex-1 rounded-md px-3 py-2 text-sm font-medium transition', tab === t.id ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}>
+              <button key={t.id} type="button" onClick={() => setTab(t.id)} className={['flex-1 rounded-md px-3 py-2 text-sm font-medium transition', tab === t.id ? 'bg-cobalt text-white' : 'text-ink/80 hover:bg-line'].join(' ')}>
                 {t.label}
               </button>
             ))}
@@ -74,7 +74,7 @@ export default function NeuralPage() {
         </div>
       }
       results={
-        <div className="space-y-2 text-slate-300">
+        <div className="space-y-2 text-ink/80">
           <p>Each tab shows its results live while training: the decision-boundary heat-map, loss and accuracy curves, confusion matrix and precision/recall/F1 (A); prediction versus truth and the arm driven by predicted angles with its tip error (B); the perceptron's weights, separating line and error count, and the XOR network's outputs (C).</p>
           <ul className="list-disc space-y-1 pl-5 text-sm">
             <li>Training runs a few epochs per animation frame, so every plot updates while the network learns; the controls change the architecture, activation, learning rate, batch size and momentum on the fly (architecture changes rebuild the network).</li>

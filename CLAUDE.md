@@ -56,10 +56,12 @@ src/
    decoupled from rendering. Always provide Play / Pause / Reset / Step buttons.
 5. Show numbers, not just pictures: live matrices, joint values, end-effector position,
    errors, metrics. Round to 3 decimals for display.
-6. Must look good on a 1366×768 projector and a laptop. Dark theme, high contrast, large
-   readable fonts (min 14px), consistent colours: link 1 = blue, link 2 = orange,
-   link 3 = green, end-effector = red, target = yellow.
-7. No backend, no API keys, no external calls except the Pyodide CDN.
+6. Must look good on a 1366×768 projector and a laptop. Follow the **Design system** section
+   below; large readable fonts (min 14px). Robot colours come from `src/theme.ts`:
+   link 1 = cobalt, link 2 = tomato, link 3 = leaf, link 4 / end-effector = ink (dark),
+   target = mustard.
+7. No backend, no API keys, no external calls except the Pyodide CDN and the Google Fonts
+   stylesheet (fonts have system fallbacks, so the site still works offline).
 8. Keep each experiment self-contained in its folder so one broken page never breaks others.
 9. After finishing a task: run `npm run build` and `npx vitest run`, fix all errors, then
    summarize what changed.
@@ -93,3 +95,35 @@ Each card: number, title, one-line description, module/CO tag, small icon.
 | 10 | /kmeans | K-Means Clustering | 4.3 · CO4 |
 | 11 | /obstacle | Obstacle Avoidance Robot | 5.2, 5.3 · CO5 |
 | 12 | /linefollower | Line Follower Robot | 5.1, 5.2 · CO5 |
+
+## Design system (light, warm — applies to every page and every drawing)
+- **Palette** (defined once as CSS variables in `src/index.css`, Tailwind tokens in
+  `tailwind.config.js` and JS constants in `src/theme.ts` — never hard-code hex values in
+  components): page background beige `#F4F1EA` (`paper`), sidebar `#EFEBE3` (`sidebar`),
+  cards white `#FFFFFF` with a 1px `#E6E1D6` (`line`) border, radius 14px, very soft shadow;
+  text `#1C1B19` (`ink`), muted text `#8A857A` (`muted`); canvas background `#FBFAF7`
+  (`field`), canvas grid `#E8E4DA` (`grid`).
+- **Accents**, used sparingly (active states, links, plot lines, robot links): cobalt
+  `#2F5FD0`, tomato `#E5533D`, mustard `#F2B33D` (text on white uses the darker
+  `mustardInk` `#A8740F`), leaf `#3F9B57`. Extra categorical colours for >4 series: teal
+  `#1F8A8A`, brown `#8B5E3C`, stone `#6B665C`.
+- **Forbidden**: dark theme, gradients, glow, glassmorphism, purple, emoji, icon-library
+  icons used as illustrations.
+- **Fonts** (Google Fonts): "Inter Tight" for headings (weight 600, letter-spacing
+  -0.03em), "Inter" for body, "IBM Plex Mono" for numbers, experiment codes, matrices and
+  small uppercase labels (letter-spacing 0.08em), "Silkscreen" ONLY for the one accent
+  phrase in the home hero.
+- **Layout**: top bar (logo mark + "RoboLab" + breadcrumb, thin bottom border, beige);
+  left sidebar with mono uppercase group labels ("MODULE 2 · KINEMATICS"), rows = mono
+  number · title · mono CO tag, active row = soft darker-beige pill, mono footer
+  "N EXPERIMENTS · M MODULES"; home = two-line hero (Inter Tight + Silkscreen), subtitle,
+  hero illustration, white "LAB STRUCTURE" panel with a 3-column card grid (mono code
+  top-left, arrow top-right, title, large centred illustration; hover lifts 2px and the
+  arrow slides right); experiment pages = header with mono code + CO tag + big title +
+  illustration, section tabs as mono text with an underline on the active one, content in
+  white cards.
+- **Drawings**: every canvas, recharts plot and three.js scene uses `src/theme.ts`
+  (field background, grid, dark axes and labels, accent series colours).
+- **Illustrations**: `<Illustration id="…" />` loads `/illustrations/<id>.png`; if missing
+  it draws a hand-drawn-style fallback SVG (thick dark outlines, accent fills, hatching,
+  feTurbulence displacement).

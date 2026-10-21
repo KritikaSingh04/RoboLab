@@ -33,14 +33,14 @@ export default function NetControls({ settings, onChange, trainer, seed, onSeed,
     <div className="space-y-3">
       {!fixedArchitecture && (
         <>
-          <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Architecture</div>
+          <div className="text-xs font-semibold uppercase tracking-wider text-muted">Architecture</div>
           <Slider label="Hidden layers" value={settings.hiddenLayers} min={1} max={3} step={1} decimals={0} onChange={(v) => set({ hiddenLayers: v })} />
           <Slider label="Neurons per hidden layer" value={settings.neurons} min={1} max={16} step={1} decimals={0} onChange={(v) => set({ neurons: v })} />
           <div>
             <div className="label mb-1">Activation</div>
-            <div className="grid grid-cols-4 gap-1 rounded-lg bg-slate-800 p-1">
+            <div className="grid grid-cols-4 gap-1 rounded-lg bg-sidebar p-1">
               {ACTIVATIONS.map((a) => (
-                <button key={a} type="button" onClick={() => set({ activation: a })} className={['rounded-md px-1 py-1 text-xs font-medium transition', settings.activation === a ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}>
+                <button key={a} type="button" onClick={() => set({ activation: a })} className={['rounded-md px-1 py-1 text-xs font-medium transition', settings.activation === a ? 'bg-cobalt text-white' : 'text-ink/80 hover:bg-line'].join(' ')}>
                   {a}
                 </button>
               ))}
@@ -48,7 +48,7 @@ export default function NetControls({ settings, onChange, trainer, seed, onSeed,
           </div>
         </>
       )}
-      <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Training</div>
+      <div className="text-xs font-semibold uppercase tracking-wider text-muted">Training</div>
       <Slider label="Learning rate η" value={settings.lr} min={0.001} max={1} step={0.001} decimals={3} onChange={(v) => set({ lr: v })} />
       <Slider label="Batch size" value={settings.batchSize} min={1} max={64} step={1} decimals={0} onChange={(v) => set({ batchSize: v })} />
       <Slider label="Momentum β" value={settings.momentum} min={0} max={0.99} step={0.01} decimals={2} onChange={(v) => set({ momentum: v })} />
@@ -61,7 +61,7 @@ export default function NetControls({ settings, onChange, trainer, seed, onSeed,
         <button type="button" className="btn" onClick={() => trainer.reset()}>↺ Reset</button>
         <button type="button" className="btn" onClick={() => { onSeed(seed + 1); trainer.reset(seed + 1); }}>New seed</button>
       </div>
-      <div className="mono text-xs text-slate-400">epoch {trainer.epoch} · loss {trainer.history.length ? trainer.history[trainer.history.length - 1].loss.toFixed(4) : '—'} · seed {seed}</div>
+      <div className="mono text-xs text-muted">epoch {trainer.epoch} · loss {trainer.history.length ? trainer.history[trainer.history.length - 1].loss.toFixed(4) : '—'} · seed {seed}</div>
     </div>
   );
 }

@@ -86,9 +86,9 @@ export function drawGrid(ctx: CanvasRenderingContext2D, t: Transform, step: numb
   ctx.save();
   ctx.lineWidth = 1;
   ctx.font = '12px ui-monospace, Menlo, monospace';
-  ctx.fillStyle = '#64748b';
+  ctx.fillStyle = '#8A857A';
   // Minor grid
-  ctx.strokeStyle = '#1e293b';
+  ctx.strokeStyle = '#E8E4DA';
   ctx.beginPath();
   for (let x = Math.floor(x0 / step) * step; x <= x1; x += step) {
     const [px] = t.toPixel(x, 0);
@@ -122,7 +122,7 @@ export function drawGrid(ctx: CanvasRenderingContext2D, t: Transform, step: numb
     ctx.fillText(y.toFixed(decimals), labelX, py);
   }
   if (axes) {
-    ctx.strokeStyle = '#475569';
+    ctx.strokeStyle = '#6B665C';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(0, Math.round(axisPy) + 0.5);
@@ -130,7 +130,7 @@ export function drawGrid(ctx: CanvasRenderingContext2D, t: Transform, step: numb
     ctx.moveTo(Math.round(axisPx) + 0.5, 0);
     ctx.lineTo(Math.round(axisPx) + 0.5, t.height);
     ctx.stroke();
-    ctx.fillStyle = '#94a3b8';
+    ctx.fillStyle = '#6B665C';
     ctx.font = 'bold 13px ui-sans-serif, system-ui';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'bottom';
@@ -190,7 +190,7 @@ export default function Canvas2D({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#020617';
+    ctx.fillStyle = '#FBFAF7';
     ctx.fillRect(0, 0, size.w, size.h);
     const t = makeTransform(view, size.w, size.h);
     if (showGrid) drawGrid(ctx, t, gridStep === 'auto' ? niceStep(view.scale) : gridStep, showAxes);
@@ -277,7 +277,7 @@ export default function Canvas2D({
       <canvas
         ref={canvasRef}
         style={{ width: size.w, height: size.h, touchAction: 'none' }}
-        className="block rounded-lg border border-slate-800"
+        className="block rounded-lg border border-line"
         onPointerDown={handleDown}
         onPointerMove={handleMove}
         onPointerUp={handleUp}
@@ -297,7 +297,7 @@ export default function Canvas2D({
           </button>
         </div>
       )}
-      {interactive && <div className="pointer-events-none absolute bottom-2 right-2 text-[11px] text-slate-500">scroll to zoom · shift+drag or right-drag to pan</div>}
+      {interactive && <div className="pointer-events-none absolute bottom-2 right-2 text-[11px] text-muted">scroll to zoom · shift+drag or right-drag to pan</div>}
     </div>
   );
 }

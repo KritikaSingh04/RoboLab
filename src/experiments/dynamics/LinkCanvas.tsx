@@ -30,7 +30,7 @@ export default function LinkCanvas({ links, torque, torqueScale = 1, gravity, tr
       const [ox, oy] = t.toPixel(0, 0);
       // trace
       if (trace && trace.length > 1) {
-        ctx.strokeStyle = 'rgba(234,179,8,0.6)';
+        ctx.strokeStyle = 'rgba(242,179,61,0.6)';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         trace.forEach((p, i) => {
@@ -41,7 +41,7 @@ export default function LinkCanvas({ links, torque, torqueScale = 1, gravity, tr
         ctx.stroke();
       }
       // wall / base
-      ctx.fillStyle = '#334155';
+      ctx.fillStyle = '#CFC8B8';
       ctx.fillRect(ox - 14, oy - 14, 28, 28);
       // ghost arm
       if (ghostLinks) {
@@ -84,12 +84,12 @@ export default function LinkCanvas({ links, torque, torqueScale = 1, gravity, tr
         ctx.stroke();
         // centre of mass
         const [cx, cy] = t.toPixel((x + nx) / 2, (y + ny) / 2);
-        ctx.fillStyle = '#0f172a';
+        ctx.fillStyle = '#1C1B19';
         ctx.beginPath();
         ctx.arc(cx, cy, 4, 0, Math.PI * 2);
         ctx.fill();
         if (l.payload) {
-          ctx.fillStyle = '#ef4444';
+          ctx.fillStyle = '#E5533D';
           ctx.beginPath();
           ctx.arc(bx, by, 10, 0, Math.PI * 2);
           ctx.fill();
@@ -100,8 +100,8 @@ export default function LinkCanvas({ links, torque, torqueScale = 1, gravity, tr
       });
       for (const [jx, jy] of joints.slice(0, -1)) {
         const [px, py] = t.toPixel(jx, jy);
-        ctx.fillStyle = '#e2e8f0';
-        ctx.strokeStyle = '#0f172a';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.strokeStyle = '#1C1B19';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(px, py, 7, 0, Math.PI * 2);
@@ -112,8 +112,8 @@ export default function LinkCanvas({ links, torque, torqueScale = 1, gravity, tr
       const l0 = links[0];
       const [gx, gy] = t.toPixel((l0.length / 2) * Math.cos(l0.angle), (l0.length / 2) * Math.sin(l0.angle));
       const gl = 18 + 4 * gravity;
-      ctx.strokeStyle = '#38bdf8';
-      ctx.fillStyle = '#38bdf8';
+      ctx.strokeStyle = '#2F5FD0';
+      ctx.fillStyle = '#2F5FD0';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.moveTo(gx, gy);
@@ -135,8 +135,8 @@ export default function LinkCanvas({ links, torque, torqueScale = 1, gravity, tr
         const ccw = torque > 0; // positive torque = counter-clockwise (screen: decreasing angle)
         const a0 = Math.PI / 2;
         const a1 = ccw ? a0 - span : a0 + span;
-        ctx.strokeStyle = '#f97316';
-        ctx.fillStyle = '#f97316';
+        ctx.strokeStyle = '#E5533D';
+        ctx.fillStyle = '#E5533D';
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.arc(ox, oy, R, a0, a1, ccw);
@@ -152,7 +152,7 @@ export default function LinkCanvas({ links, torque, torqueScale = 1, gravity, tr
         ctx.fill();
         ctx.fillText(`τ = ${torque.toFixed(2)} N·m`, ox + R + 8, oy - R + 4);
       }
-      ctx.fillStyle = '#94a3b8';
+      ctx.fillStyle = '#6B665C';
       ctx.font = '12px ui-sans-serif, system-ui';
       if (label) ctx.fillText(label, 10, t.height - 10);
     },

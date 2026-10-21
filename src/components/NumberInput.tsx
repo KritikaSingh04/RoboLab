@@ -51,8 +51,8 @@ export default function NumberInput({ label, value, min = -Infinity, max = Infin
           type="number"
           inputMode="decimal"
           className={[
-            'mono w-full rounded-md border bg-slate-900 px-2.5 py-1.5 text-sm text-slate-100 focus:outline-none',
-            invalid ? 'border-red-500 focus:border-red-400' : 'border-slate-700 focus:border-sky-500',
+            'mono w-full rounded-md border bg-field px-2.5 py-1.5 text-sm text-ink focus:outline-none',
+            invalid ? 'border-tomato focus:border-tomato' : 'border-line focus:border-cobalt',
           ].join(' ')}
           value={text}
           min={Number.isFinite(min) ? min : undefined}
@@ -66,14 +66,14 @@ export default function NumberInput({ label, value, min = -Infinity, max = Infin
           }}
           aria-invalid={invalid}
         />
-        {unit && <span className="text-sm text-slate-400">{unit}</span>}
+        {unit && <span className="text-sm text-muted">{unit}</span>}
       </div>
       {invalid ? (
-        <p className="text-xs text-red-400">
+        <p className="text-xs text-tomato">
           Enter a number{Number.isFinite(min) || Number.isFinite(max) ? ` between ${Number.isFinite(min) ? min : '−∞'} and ${Number.isFinite(max) ? max : '∞'}` : ''}.
         </p>
       ) : (
-        hint && <p className="text-xs text-slate-500">{hint}</p>
+        hint && <p className="text-xs text-muted">{hint}</p>
       )}
     </div>
   );

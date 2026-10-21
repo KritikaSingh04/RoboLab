@@ -110,21 +110,21 @@ export default function Ik3DofPage() {
   const controls = (
     <>
       <div className="space-y-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Target pose</div>
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Target pose</div>
         <Slider label="x" value={pose.x} min={-reach} max={reach} step={0.005} unit="m" onChange={(x) => setPose((p) => ({ ...p, x }))} />
         <Slider label="y" value={pose.y} min={-reach} max={reach} step={0.005} unit="m" onChange={(y) => setPose((p) => ({ ...p, y }))} />
         <Slider label="φ (orientation)" value={rad2deg(pose.phi)} min={-180} max={180} step={0.5} unit="°" decimals={1} onChange={(d) => setPose((p) => ({ ...p, phi: deg2rad(d) }))} />
       </div>
 
-      <div className="space-y-2 border-t border-slate-800 pt-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Active solution</div>
-        <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-800 p-1">
+      <div className="space-y-2 border-t border-line pt-3">
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Active solution</div>
+        <div className="grid grid-cols-2 gap-1 rounded-lg bg-sidebar p-1">
           {BRANCHES.map((b) => (
             <button
               key={b}
               type="button"
               onClick={() => setActive(b)}
-              className={['rounded-md px-2 py-1.5 text-sm font-medium transition', active === b ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}
+              className={['rounded-md px-2 py-1.5 text-sm font-medium transition', active === b ? 'bg-cobalt text-white' : 'text-ink/80 hover:bg-line'].join(' ')}
             >
               {BRANCH_LABEL[b]}
             </button>
@@ -133,8 +133,8 @@ export default function Ik3DofPage() {
         <Toggle label="Show other solution (ghost)" checked={showGhost} onChange={setShowGhost} />
       </div>
 
-      <div className="space-y-2 border-t border-slate-800 pt-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Link lengths</div>
+      <div className="space-y-2 border-t border-line pt-3">
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Link lengths</div>
         <div className="grid grid-cols-3 gap-2">
           {(['l1', 'l2', 'l3'] as const).map((k, i) => (
             <NumberInput key={k} label={`L${i + 1}`} value={links[k]} min={0.05} max={3} step={0.05} unit="m" onChange={(v) => setLinks((l) => ({ ...l, [k]: v }))} />
@@ -142,9 +142,9 @@ export default function Ik3DofPage() {
         </div>
       </div>
 
-      <div className="space-y-2 border-t border-slate-800 pt-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Mouse mode</div>
-        <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-800 p-1">
+      <div className="space-y-2 border-t border-line pt-3">
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">Mouse mode</div>
+        <div className="grid grid-cols-2 gap-1 rounded-lg bg-sidebar p-1">
           {(
             [
               ['target', 'Move target'],
@@ -155,7 +155,7 @@ export default function Ik3DofPage() {
               key={m}
               type="button"
               onClick={() => setMode(m)}
-              className={['rounded-md px-2 py-1.5 text-sm font-medium transition', mode === m ? 'bg-violet-600 text-white' : 'text-slate-300 hover:bg-slate-700'].join(' ')}
+              className={['rounded-md px-2 py-1.5 text-sm font-medium transition', mode === m ? 'bg-ink text-white' : 'text-ink/80 hover:bg-line'].join(' ')}
             >
               {label}
             </button>
@@ -163,7 +163,7 @@ export default function Ik3DofPage() {
         </div>
         {mode === 'draw' && (
           <div className="space-y-3 pt-1">
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-muted">
               {path.length > 1 ? `Path: ${path[path.length - 1].s.toFixed(3)} m, ${path.length} samples. Press Play to follow it.` : 'Drag on the canvas to draw a curve.'}
             </p>
             <Slider label="Tool speed" value={speed} min={0.1} max={2} step={0.05} unit="m/s" decimals={2} onChange={setSpeed} />
@@ -192,7 +192,7 @@ export default function Ik3DofPage() {
       theory={
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Forward kinematics</h3>
+            <h3 className="font-semibold text-ink">Forward kinematics</h3>
             <p>With link lengths L₁, L₂, L₃ and joint angles θ₁, θ₂, θ₃ measured counter-clockwise, the tip position and orientation are</p>
             <Equation tex={String.raw`x = L_1 c_1 + L_2 c_{12} + L_3 c_{123},\qquad y = L_1 s_1 + L_2 s_{12} + L_3 s_{123},\qquad \varphi = \theta_1 + \theta_2 + \theta_3`} />
             <p>
@@ -201,13 +201,13 @@ export default function Ik3DofPage() {
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Decoupling the wrist</h3>
+            <h3 className="font-semibold text-ink">Decoupling the wrist</h3>
             <p>Because φ is given, the wrist (joint 3) position follows directly by stepping back one link from the tip:</p>
             <Equation tex={String.raw`x_w = x - L_3\cos\varphi,\qquad y_w = y - L_3\sin\varphi`} />
             <p>What remains is the classic two-link problem of placing the wrist with links L₁ and L₂.</p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Elbow angle from the law of cosines</h3>
+            <h3 className="font-semibold text-ink">Elbow angle from the law of cosines</h3>
             <Equation tex={String.raw`x_w^2 + y_w^2 = L_1^2 + L_2^2 + 2L_1L_2\cos\theta_2 \;\Rightarrow\; c_2 = \frac{x_w^2 + y_w^2 - L_1^2 - L_2^2}{2L_1L_2}`} />
             <p>
               A real solution needs |c₂| ≤ 1, i.e. the wrist must lie in the annulus |L₁ − L₂| ≤ r ≤ L₁ + L₂. Otherwise the target is outside the
@@ -216,7 +216,7 @@ export default function Ik3DofPage() {
             <Equation tex={String.raw`\theta_2 = \operatorname{atan2}\!\left(\mp\sqrt{1 - c_2^2},\; c_2\right)\qquad(-:\ \text{elbow-up},\ +:\ \text{elbow-down})`} />
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-white">Shoulder and wrist angles</h3>
+            <h3 className="font-semibold text-ink">Shoulder and wrist angles</h3>
             <p>
               The direction to the wrist is β = atan2(y_w, x_w); the angle between link 1 and the base–wrist line is γ. Subtracting gives θ₁, and the
               orientation constraint gives θ₃:
@@ -231,16 +231,16 @@ export default function Ik3DofPage() {
       simulation={
         <SimulationLayout controls={controls}>
           <div className="space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
               <span>
                 <span className="mr-3"><span className="mr-1 inline-block h-2 w-3 bg-link1" />link 1</span>
                 <span className="mr-3"><span className="mr-1 inline-block h-2 w-3 bg-link2" />link 2</span>
                 <span className="mr-3"><span className="mr-1 inline-block h-2 w-3 bg-link3" />link 3</span>
                 <span className="mr-3"><span className="mr-1 inline-block h-2 w-3 bg-ee" />tip</span>
                 <span className="mr-3"><span className="mr-1 inline-block h-2 w-3 bg-target" />target</span>
-                <span><span className="mr-1 inline-block h-2 w-3 bg-sky-400/20 ring-1 ring-sky-400/60" />reachable (current φ)</span>
+                <span><span className="mr-1 inline-block h-2 w-3 bg-cobalt/20 ring-1 ring-cobalt/50" />reachable (current φ)</span>
               </span>
-              <span className={ik.reachable ? 'text-slate-500' : 'font-semibold text-red-400'}>{ik.reachable ? `${BRANCH_LABEL[active]} shown solid` : 'Target outside workspace'}</span>
+              <span className={ik.reachable ? 'text-muted' : 'font-semibold text-tomato'}>{ik.reachable ? `${BRANCH_LABEL[active]} shown solid` : 'Target outside workspace'}</span>
             </div>
             <IkCanvas
               links={links}
@@ -266,9 +266,9 @@ export default function Ik3DofPage() {
                   xLabel="t (s)"
                   yLabel="angle (°)"
                   series={[
-                    { key: 'θ1', color: '#3b82f6' },
-                    { key: 'θ2', color: '#f97316' },
-                    { key: 'θ3', color: '#22c55e' },
+                    { key: 'θ1', color: '#2F5FD0' },
+                    { key: 'θ2', color: '#E5533D' },
+                    { key: 'θ3', color: '#3F9B57' },
                   ]}
                   xMarker={loop.time}
                   height={240}
@@ -281,11 +281,11 @@ export default function Ik3DofPage() {
       results={
         <div className="space-y-4">
           <div className="card">
-            <h3 className="mb-2 font-semibold text-white">Joint solutions</h3>
+            <h3 className="mb-2 font-semibold text-ink">Joint solutions</h3>
             {ik.reachable ? (
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-slate-400">
+                  <tr className="text-left text-muted">
                     <th className="py-1 font-medium">Solution</th>
                     <th className="py-1 text-right font-medium">θ₁</th>
                     <th className="py-1 text-right font-medium">θ₂</th>
@@ -298,22 +298,22 @@ export default function Ik3DofPage() {
                   {BRANCHES.map((b) => {
                     const s = ik.solutions[b]!;
                     return (
-                      <tr key={b} className={['border-t border-slate-800', b === active ? 'text-white' : 'text-slate-400'].join(' ')}>
+                      <tr key={b} className={['border-t border-line', b === active ? 'text-ink' : 'text-muted'].join(' ')}>
                         <td className="py-1 font-sans">
-                          {BRANCH_LABEL[b]} {b === active && <span className="ml-1 rounded bg-sky-500/20 px-1.5 text-xs text-sky-300">active</span>}
+                          {BRANCH_LABEL[b]} {b === active && <span className="ml-1 rounded bg-cobalt/10 px-1.5 text-xs text-cobalt">active</span>}
                         </td>
                         <td className="py-1 text-right">{fmtDeg(s.q[0])}</td>
                         <td className="py-1 text-right">{fmtDeg(s.q[1])}</td>
                         <td className="py-1 text-right">{fmtDeg(s.q[2])}</td>
-                        <td className="py-1 text-right text-emerald-400">{s.posError.toExponential(2)} m</td>
-                        <td className="py-1 text-right text-emerald-400">{rad2deg(s.phiError).toExponential(2)}°</td>
+                        <td className="py-1 text-right text-leaf">{s.posError.toExponential(2)} m</td>
+                        <td className="py-1 text-right text-leaf">{rad2deg(s.phiError).toExponential(2)}°</td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
             ) : (
-              <p className="text-red-400">
+              <p className="text-tomato">
                 Target outside workspace: |c₂| = {Math.abs(ik.working.c2).toFixed(3)} &gt; 1. Move the target inside the shaded annulus (for the current φ) or change φ.
               </p>
             )}
@@ -326,22 +326,22 @@ export default function Ik3DofPage() {
                   ['wrist (x_w, y_w)', `(${ik.working.xw.toFixed(3)}, ${ik.working.yw.toFixed(3)})`],
                 ] as const
               ).map(([k, v]) => (
-                <div key={k} className="flex justify-between border-b border-slate-800 py-1">
-                  <span className="text-slate-400">{k}</span>
-                  <span className="text-white">{v}</span>
+                <div key={k} className="flex justify-between border-b border-line py-1">
+                  <span className="text-muted">{k}</span>
+                  <span className="text-ink">{v}</span>
                 </div>
               ))}
             </div>
             {activeSol && (
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-muted">
                 Sum check: θ₁ + θ₂ + θ₃ = {rad2deg(wrapAngle(activeSol.q[0] + activeSol.q[1] + activeSol.q[2])).toFixed(3)}° = φ.
               </p>
             )}
           </div>
 
           <div className="card">
-            <h3 className="mb-1 font-semibold text-white">Solution working ({BRANCH_LABEL[active]})</h3>
-            <p className="mb-3 text-xs text-slate-500">Every step of the derivation with the current numbers substituted. Switch the active solution to see the other branch.</p>
+            <h3 className="mb-1 font-semibold text-ink">Solution working ({BRANCH_LABEL[active]})</h3>
+            <p className="mb-3 text-xs text-muted">Every step of the derivation with the current numbers substituted. Switch the active solution to see the other branch.</p>
             <WorkingPanel links={links} pose={pose} ik={ik} branch={active} />
           </div>
         </div>

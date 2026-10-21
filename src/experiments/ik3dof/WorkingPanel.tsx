@@ -61,10 +61,10 @@ export default function WorkingPanel({ links, pose, ik, branch }: { links: Plana
   return (
     <ol className="space-y-3">
       {steps.map((s, i) => (
-        <li key={i} className={s.title ? 'border-t border-slate-800 pt-3 first:border-0 first:pt-0' : ''}>
-          {s.title && <div className="mb-1 text-sm font-semibold text-slate-200">{s.title}</div>}
+        <li key={i} className={s.title ? 'border-t border-line pt-3 first:border-0 first:pt-0' : ''}>
+          {s.title && <div className="mb-1 text-sm font-semibold text-ink">{s.title}</div>}
           <Equation tex={s.tex} />
-          {s.note && <div className={['text-sm', ik.reachable ? 'text-slate-400' : 'text-red-400'].join(' ')}>{s.note}</div>}
+          {s.note && <div className={['text-sm', ik.reachable ? 'text-muted' : 'text-tomato'].join(' ')}>{s.note}</div>}
         </li>
       ))}
     </ol>

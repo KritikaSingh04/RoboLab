@@ -25,7 +25,7 @@ export default function ArmCanvas({ title, links, samples, q, t, pathColor, star
       const [ox, oy] = tr.toPixel(0, 0);
       // Workspace annulus
       ctx.save();
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+      ctx.strokeStyle = 'rgba(47, 95, 208, 0.45)';
       ctx.setLineDash([5, 5]);
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -66,7 +66,7 @@ export default function ArmCanvas({ title, links, samples, q, t, pathColor, star
       drawPath((s) => s.t <= t + 1e-9, 1, 3);
       // Unreachable parts of the path in red
       ctx.save();
-      ctx.fillStyle = '#ef4444';
+      ctx.fillStyle = '#E5533D';
       for (const s of samples) {
         if (s.reachable) continue;
         const [px, py] = tr.toPixel(s.tip[0], s.tip[1]);
@@ -88,14 +88,14 @@ export default function ArmCanvas({ title, links, samples, q, t, pathColor, star
         ctx.fillText(label, px + 12, py - 10);
         ctx.restore();
       };
-      marker(start, '#22c55e', 'start');
-      marker(end, '#eab308', 'end');
+      marker(start, '#3F9B57', 'start');
+      marker(end, '#F2B33D', 'end');
 
       // Arm
       if (q) {
         const { elbow, tip } = twoLinkFK(links, q);
         const pts = [[0, 0], elbow, tip] as [number, number][];
-        const colors = ['#3b82f6', '#f97316'];
+        const colors = ['#2F5FD0', '#E5533D'];
         ctx.save();
         ctx.lineCap = 'round';
         for (let i = 0; i < 2; i++) {
@@ -110,8 +110,8 @@ export default function ArmCanvas({ title, links, samples, q, t, pathColor, star
         }
         for (let i = 0; i < 2; i++) {
           const [px, py] = tr.toPixel(pts[i][0], pts[i][1]);
-          ctx.fillStyle = i === 0 ? '#94a3b8' : '#e2e8f0';
-          ctx.strokeStyle = '#0f172a';
+          ctx.fillStyle = i === 0 ? '#6B665C' : '#FFFFFF';
+          ctx.strokeStyle = '#1C1B19';
           ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.arc(px, py, i === 0 ? 8 : 6, 0, Math.PI * 2);
@@ -119,14 +119,14 @@ export default function ArmCanvas({ title, links, samples, q, t, pathColor, star
           ctx.stroke();
         }
         const [ex, ey] = tr.toPixel(tip[0], tip[1]);
-        ctx.fillStyle = '#ef4444';
+        ctx.fillStyle = '#E5533D';
         ctx.beginPath();
         ctx.arc(ex, ey, 6, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       } else {
         ctx.save();
-        ctx.fillStyle = '#ef4444';
+        ctx.fillStyle = '#E5533D';
         ctx.font = 'bold 13px ui-sans-serif, system-ui';
         ctx.textAlign = 'center';
         ctx.fillText('Target outside workspace', tr.width / 2, 40);
@@ -134,12 +134,12 @@ export default function ArmCanvas({ title, links, samples, q, t, pathColor, star
       }
 
       ctx.save();
-      ctx.fillStyle = '#cbd5e1';
+      ctx.fillStyle = '#1C1B19';
       ctx.font = 'bold 13px ui-sans-serif, system-ui';
       ctx.textAlign = 'left';
       ctx.fillText(title, 10, 18);
       if (pickLabel) {
-        ctx.fillStyle = '#a78bfa';
+        ctx.fillStyle = '#1F8A8A';
         ctx.font = '12px ui-sans-serif, system-ui';
         ctx.fillText(pickLabel, 10, tr.height - 10);
       }
