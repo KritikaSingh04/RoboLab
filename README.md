@@ -5,7 +5,9 @@ Every experiment is a page with the lab write-up structure — **Aim · Theory �
 all mathematics is written from scratch in pure, unit-tested TypeScript (no ML libraries), and nothing runs outside
 the browser. The only network access is the optional download of the Pyodide runtime for the Python experiment.
 
-> **Live site:** `https://<your-user>.github.io/<repo>/` (published automatically by the GitHub Actions workflow).
+> **Live site (GitHub Pages):** `https://kritikasingh04.github.io/RoboLab/` (published automatically by the GitHub Actions workflow).
+>
+> **Live site (Vercel):** _coming soon_ — add the Vercel deployment link here.
 
 ![Home page](docs/screenshots/home.png)
 
